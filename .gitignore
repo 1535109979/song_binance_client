@@ -1,0 +1,49 @@
+# Intellij project files
+*.iml
+*.iws
+*.db
+.idea/
+
+# Mac
+.DS_Store
+
+# Maven
+logs/
+target/
+test-output/
+bin/
+
+# Python
+__pycache__/
+.pytest_cache/
+*.pyc
+venv/
+
+# Eclipse project files
+.classpath
+.project
+.settings/
+.externalToolBuilders/
+.metadata/
+.recommenders/
+RemoteSystemsTempFiles/
+
+# Others
+source/src/main/resources/.h2.server.properties
+core.*
+nohup.out
+tmp_test/
+_trial_temp/
+_trial_temp.*
+instance/
+.cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+*.swp
+*~
+
+# nacos
+nacos-data/
