@@ -1,5 +1,5 @@
-from a_songbo.binance_client.strategy_server.strategys.breakout import BreakoutStrategy
-from a_songbo.binance_client.strategy_server.strategys.stop_cover import StopLoss
+from binance_client.strategy_server.strategys.breakout import BreakoutStrategy
+from binance_client.strategy_server.strategys.stop_cover import StopLoss
 
 
 class StrategyProcess:

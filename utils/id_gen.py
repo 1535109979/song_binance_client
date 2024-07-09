@@ -2,7 +2,7 @@ from abc import ABC
 
 import ulid
 
-from a_songbo.binance_client.utils import iter_util
+from binance_client.utils import iter_util
 
 
 class IdGenerator(ABC):

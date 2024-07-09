@@ -3,10 +3,10 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Tuple, Dict
 
-from a_songbo.binance_client.utils import type_util
-from a_songbo.binance_client.utils.exchange_enum import SourceType, ExchangeType, InstrumentCategory, OrderStatus, \
+from binance_client.utils import type_util
+from binance_client.utils.exchange_enum import SourceType, ExchangeType, InstrumentCategory, OrderStatus, \
     OffsetFlag, Direction
-from a_songbo.binance_client.utils.id_gen import UlIdGenerator
+from binance_client.utils.id_gen import UlIdGenerator
 
 # 多空和开平方向映射
 DIRECTION_2VT = {

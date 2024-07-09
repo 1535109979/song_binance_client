@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
 
-from a_songbo.binance_client.trade.do.rtn_order import RtnOrder
-from a_songbo.binance_client.utils import type_util
-from a_songbo.binance_client.utils.exchange_enum import OffsetFlag, Direction, ExchangeType
+from binance_client.trade.do.rtn_order import RtnOrder
+from binance_client.utils import type_util
+from binance_client.utils.exchange_enum import OffsetFlag, Direction, ExchangeType
 
 
 @dataclass

@@ -1,8 +1,8 @@
 import logging
 
-from a_songbo.binance_client.market.bian_future.bian_future_md import BiFutureMd
-from a_songbo.binance_client.utils.configs import Configs
-from a_songbo.binance_client.utils.dingding import Dingding
+from binance_client.market.bian_future.bian_future_md import BiFutureMd
+from binance_client.utils.configs import Configs
+from binance_client.utils.dingding import Dingding
 
 
 class BiFutureMdGateway:
@@ -32,7 +32,8 @@ class BiFutureMdGateway:
     def create_logger(self):
         self.logger = logging.getLogger('bi_future_ms')
         self.logger.setLevel(logging.DEBUG)
-        file_handler = logging.FileHandler(Configs.root_fp + 'a_songbo/binance_client/logs/bi_future_ms.log')
+        log_fp = Configs.root_fp + 'binance_client/logs/bi_future_ms.log'
+        file_handler = logging.FileHandler(log_fp)
         formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
         file_handler.setFormatter(formatter)
         self.logger.addHandler(file_handler)

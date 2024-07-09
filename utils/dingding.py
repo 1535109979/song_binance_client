@@ -3,7 +3,7 @@ from datetime import datetime
 
 import requests
 
-from a_songbo.binance_client.utils.lock import instance_synchronized
+from binance_client.utils.lock import instance_synchronized
 
 
 class Dingding:
