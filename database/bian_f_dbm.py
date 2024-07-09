@@ -3,11 +3,12 @@ from datetime import datetime
 
 from peewee import *
 
+from song_binance_client.utils.configs import Configs
+
 
 class SqliteDatabaseManage:
     def __init__(self):
-        self.root_fp = os.path.join(os.path.expanduser('~'))
-        self.data_fp = self.root_fp + '/byt_pub/a_songbo/binance_client/database/'
+        self.data_fp = Configs.root_fp + 'song_binance_client/database/'
 
     def get_connect(self, db_name=''):
         db_fp = self.data_fp + 'bian_f_data.db'
