@@ -1,7 +1,6 @@
 # Intellij project files
 *.iml
 *.iws
-*.db
 .idea/
 
 # Mac
