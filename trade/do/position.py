@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
 
-from binance_client.trade.do.rtn_trade import RtnTrade
-from binance_client.utils import type_util
-from binance_client.utils.exchange_enum import Direction, MarginType, OffsetFlag
+from song_binance_client.trade.do.rtn_trade import RtnTrade
+from song_binance_client.utils import type_util
+from song_binance_client.utils.exchange_enum import Direction, MarginType, OffsetFlag
 
 
 @dataclass

@@ -1,5 +1,5 @@
-from binance_client.trade.do.position import InstrumentPosition
-from binance_client.utils.exchange_enum import Direction, OffsetFlag, OrderPriceType
+from song_binance_client.trade.do.position import InstrumentPosition
+from song_binance_client.utils.exchange_enum import Direction, OffsetFlag, OrderPriceType
 
 
 class StopLoss:

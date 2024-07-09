@@ -1,6 +1,6 @@
 from enum import Enum, unique
 
-from binance_client.utils import iter_util, type_util
+from song_binance_client.utils import iter_util, type_util
 
 
 class BaseEnum(Enum):

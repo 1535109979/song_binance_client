@@ -3,13 +3,13 @@ import time
 from copy import copy
 from datetime import datetime
 
-from binance_client.database.bian_f_dbm import RtnTrade, AccountValue
-from binance_client.trade.future_api import BiFutureTd
-from binance_client.utils.aio_timer import AioTimer
-from binance_client.utils.configs import Configs
-from binance_client.utils.dingding import Dingding
-from binance_client.utils.exchange_enum import OffsetFlag, Direction, OrderPriceType, ExchangeType
-from binance_client.utils.sys_exception import common_exception
+from song_binance_client.database.bian_f_dbm import RtnTrade, AccountValue
+from song_binance_client.trade.future_api import BiFutureTd
+from song_binance_client.utils.aio_timer import AioTimer
+from song_binance_client.utils.configs import Configs
+from song_binance_client.utils.dingding import Dingding
+from song_binance_client.utils.exchange_enum import OffsetFlag, Direction, OrderPriceType, ExchangeType
+from song_binance_client.utils.sys_exception import common_exception
 
 
 class BiFutureTdGateway:
@@ -139,7 +139,7 @@ class BiFutureTdGateway:
     def create_logger(self):
         self.logger = logging.getLogger('bi_future_ts')
         self.logger.setLevel(logging.DEBUG)
-        file_handler = logging.FileHandler(Configs.root_fp + 'binance_client/logs/bi_future_ts.log')
+        file_handler = logging.FileHandler(Configs.root_fp + 'song_binance_client/logs/bi_future_ts.log')
         formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
         file_handler.setFormatter(formatter)
         self.logger.addHandler(file_handler)

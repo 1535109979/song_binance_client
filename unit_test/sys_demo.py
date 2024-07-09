@@ -1,4 +1,4 @@
-from binance_client.utils.sys_exception import common_exception
+from song_binance_client.utils.sys_exception import common_exception
 
 
 @common_exception(log_flag=True)

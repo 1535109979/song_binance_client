@@ -2,7 +2,7 @@ import functools
 import logging
 import traceback
 
-from binance_client.utils.dingding import Dingding
+from song_binance_client.utils.dingding import Dingding
 
 logger = logging.getLogger('bi_future_ts')
 

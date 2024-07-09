@@ -6,8 +6,8 @@ import time
 
 from binance.websocket.websocket_client import BinanceWebsocketClient
 
-from binance_client.utils.aio_timer import AioTimer
-from binance_client.utils.sys_exception import common_exception
+from song_binance_client.utils.aio_timer import AioTimer
+from song_binance_client.utils.sys_exception import common_exception
 
 
 class BiFutureMd:

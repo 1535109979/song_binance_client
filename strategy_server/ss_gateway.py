@@ -1,12 +1,12 @@
 import time
 from concurrent.futures import ThreadPoolExecutor
 
-from binance_client.market.md_gateway import BiFutureMdGateway
-from binance_client.strategy_server.strategy_process import StrategyProcess
+from song_binance_client.market.md_gateway import BiFutureMdGateway
+from song_binance_client.strategy_server.strategy_process import StrategyProcess
 
-from binance_client.trade.td_gateway import BiFutureTdGateway
-from binance_client.utils.configs import Configs
-from binance_client.utils.thread import submit
+from song_binance_client.trade.td_gateway import BiFutureTdGateway
+from song_binance_client.utils.configs import Configs
+from song_binance_client.utils.thread import submit
 
 
 class BiFutureSsGateway:

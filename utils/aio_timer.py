@@ -2,9 +2,9 @@ import asyncio
 import logging
 import threading
 
-from binance_client.utils import thread
-from binance_client.utils.lock import func_synchronized
-from binance_client.utils.thread import COMMON_HUGE_POOL
+from song_binance_client.utils import thread
+from song_binance_client.utils.lock import func_synchronized
+from song_binance_client.utils.thread import COMMON_HUGE_POOL
 
 logger = logging.getLogger('bi_future_ts')
 
