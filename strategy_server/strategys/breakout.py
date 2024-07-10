@@ -56,6 +56,10 @@ class BreakoutStrategy:
         instrument = quote['symbol']
 
         if not self.last_n_min:
+            self.strategy_process.logger.info(f'<cal_singal> ignore no last_n_min am_len={len(self.am)}')
+            return
+
+        if len(self.roll_mean_list) < self.interval_period * 2:
             return
 
         # 开仓方向
@@ -85,6 +89,7 @@ class BreakoutStrategy:
         else:
             if self.trade_first:
                 if open_direction == Direction.LONG:
+
                     if last_price > self.roll_mean_list[-self.interval_period] > self.roll_mean_list[-self.interval_period * 2]:
                         return
 
