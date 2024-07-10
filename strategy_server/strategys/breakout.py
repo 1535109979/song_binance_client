@@ -60,6 +60,7 @@ class BreakoutStrategy:
             return
 
         if len(self.roll_mean_list) < self.interval_period * 2:
+            self.strategy_process.logger.info(f'<cal_singal> ignore roll_mean_list={len(self.roll_mean_list)}')
             return
 
         # 开仓方向
