@@ -21,10 +21,10 @@ class BreakoutStrategy:
         self.trade_first = True
 
     def cal_indicator(self, quote):
-        if not quote.get('is_closed', 0):
-            return
+        # if not quote.get('is_closed', 0):
+        #     return
 
-        last_price = float(quote['last_price'])
+        last_price = quote['last_price']
 
         if len(self.am) < self.windows:
             self.am.append(last_price)
@@ -39,7 +39,7 @@ class BreakoutStrategy:
         self.last_n_min = min(self.am[-self.windows:])
 
         self.am.append(last_price)
-        roll_mean = round(sum(self.am[-self.roll_mean_period:]) / self.roll_mean_period, 8)
+        roll_mean = round(sum([float(x) for x in self.am[-self.roll_mean_period:]]) / self.roll_mean_period, 8)
         self.roll_mean_list.append(roll_mean)
         self.roll_mean_list = self.roll_mean_list[-self.interval_period * 2:]
 
@@ -51,8 +51,8 @@ class BreakoutStrategy:
             self.strategy_process.logger.info('<cal_singal> after stop_loss clear am')
             self.strategy_process.stop_loss_flag = False
 
-        if not quote.get('is_closed', 0):
-            return
+        # if not quote.get('is_closed', 0):
+        #     return
 
         last_price = quote['last_price']
         instrument = quote['symbol']
@@ -87,20 +87,18 @@ class BreakoutStrategy:
         self.strategy_process.logger.info(f'direction_position={direction_position}')
         self.strategy_process.logger.info(f'opposite_direction_position={opposite_direction_position}')
 
-        return
-
         if direction_position.volume:
             return
         else:
             if self.trade_first:
                 if open_direction == Direction.LONG:
 
-                    if last_price > self.roll_mean_list[-self.interval_period] > self.roll_mean_list[-self.interval_period * 2]:
+                    if float(last_price) > self.roll_mean_list[-self.interval_period] > self.roll_mean_list[-self.interval_period * 2]:
                         return
 
                     trade_price = Decimal(last_price) + Decimal('0.001')
                 else:
-                    if last_price < self.roll_mean_list[-self.interval_period] < self.roll_mean_list[-self.interval_period * 2]:
+                    if float(last_price) < self.roll_mean_list[-self.interval_period] < self.roll_mean_list[-self.interval_period * 2]:
                         return
                     trade_price = Decimal(last_price) - Decimal('0.001')
             else:
