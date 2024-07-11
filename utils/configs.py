@@ -5,8 +5,8 @@ class Configs:
 
     strategy_list = [
         {'instrument': 'EOSUSDT',
-         'breakout': {'open_direction': 'LONG', 'windows': 400, 'open_volume': 20,
-                    'interval_period': 120, 'roll_mean_period': 200},
+         'breakout': {'open_direction': 'LONG', 'windows': 10, 'open_volume': 20,
+                    'interval_period': 5, 'roll_mean_period': 2},
          'stop_loss': {'stop_loss_rate': 0.1}
          },
         # {'instrument': 'LTCUSDT',

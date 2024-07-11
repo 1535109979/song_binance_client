@@ -12,6 +12,7 @@ class BreakoutStrategy:
         self.open_volume = params['open_volume']
         self.interval_period = params['interval_period']
         self.roll_mean_period = params['roll_mean_period']
+        self.min_save_window = max(self.windows, self.interval_period * 2 + self.roll_mean_period)
 
         self.am = []
         self.roll_mean_list = []
@@ -23,29 +24,30 @@ class BreakoutStrategy:
         if not quote.get('is_closed', 0):
             return
 
-        last_price = quote['last_price']
+        last_price = float(quote['last_price'])
 
         if len(self.am) < self.windows:
             self.am.append(last_price)
             if len(self.am) >= self.roll_mean_period:
-                roll_mean = round(sum(self.am[-self.roll_mean_period:]) / self.roll_mean_period, 8)
+                roll_mean = round(sum([float(x) for x in self.am[-self.roll_mean_period:]]) / self.roll_mean_period, 8)
                 self.roll_mean_list.append(roll_mean)
+
             return
 
-        self.am = self.am[-self.roll_mean_period * 2:]
+        self.am = self.am[-self.min_save_window:]
         self.last_n_max = max(self.am[-self.windows:])
         self.last_n_min = min(self.am[-self.windows:])
 
         self.am.append(last_price)
         roll_mean = round(sum(self.am[-self.roll_mean_period:]) / self.roll_mean_period, 8)
         self.roll_mean_list.append(roll_mean)
-        if len(self.roll_mean_list) > self.interval_period * 2:
-            self.roll_mean_list = self.roll_mean_list[-self.interval_period * 2:]
+        self.roll_mean_list = self.roll_mean_list[-self.interval_period * 2:]
 
     def cal_singal(self, quote):
         # 止损后 清空am 隔段时间再交易
         if self.strategy_process.stop_loss_flag:
             self.am = []
+            self.roll_mean_list = []
             self.strategy_process.logger.info('<cal_singal> after stop_loss clear am')
             self.strategy_process.stop_loss_flag = False
 
@@ -84,6 +86,8 @@ class BreakoutStrategy:
 
         self.strategy_process.logger.info(f'direction_position={direction_position}')
         self.strategy_process.logger.info(f'opposite_direction_position={opposite_direction_position}')
+
+        return
 
         if direction_position.volume:
             return
