@@ -99,15 +99,7 @@ class BiFutureTdGateway:
         self.client.cancel_all_order(instrument)
 
     def get_api_configs(self):
-        return {
-            'recvWindow': '5000',
-            'stream_url': 'wss://fstream.binance.com',
-            'base_url': 'https://fapi.binance.com',
-            'api_key': '8kHJ8xMwb8wZkrTy17IVOym4CDo5qS6JFP8suvpsDaWCqjuBuIAn29HFYKuQM1bE',
-            'secret_key': 'uUH1X2sz5jnMVhL44zxHiphnxhoQ5swPs62gFg4JFLCRayWwFr2MZJm9dJlaM2WK',
-            # 'api_key': 'lfFQPMO2aNVuq6RI8h4PzPObfLQjWsvPcJ8zpfbYb0TJZV3zFmuxTTN7z0aj7lnc',
-            # 'secret_key': '9x0h75LjgFw7QwAa7yYFOvDOpN4VKPx4i6iRiicTadZpTLMrTqW4uetm1GSg8srk',
-            }
+        return Configs.api_config
 
     def send_position_error_msg(self, instrument, error):
         self.logger.error(f"<send_position_error_msg> {instrument} {error}")

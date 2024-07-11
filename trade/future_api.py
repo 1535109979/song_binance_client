@@ -154,8 +154,6 @@ class BiFutureTd:
                 "连续{}分钟没有收到on_ping回调".format(round(ts / 60, 1)))
             self.close()
             self._start_listen()
-        else:
-            self.gateway.stop()
 
     @common_exception(log_flag=True)
     def close(self):
