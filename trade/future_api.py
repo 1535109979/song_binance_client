@@ -239,7 +239,7 @@ class BiFutureTd:
             error_msg = f"持仓信息不一致 !!! {position.instrument} {position.direction.value} " \
                         f"volume: {volume} ~~ {position.volume} cost: {cost} ~~ {position.cost} "
             self.gateway.send_position_error_msg(instrument=position.instrument, error=error_msg)
-            self.gateway.on_account_update(instruments=position.instrument)
+            # self.gateway.on_account_update(instruments=position.instrument)
 
     @common_exception(log_flag=True)
     def _on_user_data(self, _, data):
@@ -258,7 +258,7 @@ class BiFutureTd:
             if self.reqUserLoginId == 1:
                 # 添加定时器
                 self._add_restart_listen_timer()
-                self.gateway.on_account_update()
+                # self.gateway.on_account_update()
             else:
                 # 发送启动成功通知
                 self.gateway.send_start_msg(login_reqid=self.reqUserLoginId)
@@ -292,7 +292,7 @@ class BiFutureTd:
                         B.get("wb"), precision=8, default=0)
                     # self.account_book.avail += type_util.get_precision_number(
                     #     B.get("bc"), precision=LocalConfig.avail_precision, default=0)
-                    self.gateway.on_account_update()
+                    # self.gateway.on_account_update()
                     break
 
             # 更新账户持仓
@@ -344,7 +344,7 @@ class BiFutureTd:
                 # 计算持仓信息
                 position = self.account_book.update_by_trade_rtn(rtn_trade)
                 self.logger.info("<position> %s", position)
-                self.gateway.on_trade(rtn_trade)
+                # self.gateway.on_trade(rtn_trade)
 
             self.gateway.on_order(rtn_order)
 

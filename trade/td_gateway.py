@@ -75,11 +75,7 @@ class BiFutureTdGateway:
                 self.insert_order(**v)
 
     def on_order(self, rtn_order):
-        if (len(self.open_orders_map.keys()) and rtn_order.order_id in self.open_orders_map
-                and rtn_order.order_status.is_completed()):
-            self.open_orders_map.pop(rtn_order.order_id)
-            self.logger.info(f'<>open_orders_map: {self.open_orders_map}')
-
+        pass
     def on_trade(self, rtn_trade):
         save_rtn_trade = RtnTrade(
             instrument=rtn_trade.instrument,
