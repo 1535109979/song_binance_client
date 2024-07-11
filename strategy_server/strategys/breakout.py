@@ -21,8 +21,8 @@ class BreakoutStrategy:
         self.trade_first = True
 
     def cal_indicator(self, quote):
-        # if not quote.get('is_closed', 0):
-        #     return
+        if not quote.get('is_closed', 0):
+            return
 
         last_price = quote['last_price']
 
@@ -51,8 +51,8 @@ class BreakoutStrategy:
             self.strategy_process.logger.info('<cal_singal> after stop_loss clear am')
             self.strategy_process.stop_loss_flag = False
 
-        # if not quote.get('is_closed', 0):
-        #     return
+        if not quote.get('is_closed', 0):
+            return
 
         last_price = quote['last_price']
         instrument = quote['symbol']
