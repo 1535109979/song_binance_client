@@ -42,7 +42,7 @@ class BiFutureMd:
 
         self.logger.warning("!! _check_md_time_flag !! %s", ts)
 
-        if 60 * 5 < ts < 30 * 5:
+        if 60 * 6 < ts < 60 * 30:
             self.gateway.on_front_disconnected(
                 "连续{}分钟没有收到行情".format(round(ts / 60, 1)))
             self._reconnect()
