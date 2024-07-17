@@ -72,12 +72,12 @@ class BreakoutStrategy:
         elif last_price > self.last_n_max:
             open_direction = self.open_direction.get_opposite_direction()
 
+        self.strategy_process.logger.info(f"<cal_singal>am={len(self.am)} l={last_price} min={self.last_n_min} "
+                                          f"max={self.last_n_max} open_direction={open_direction} "
+                                          )
+
         if not open_direction:
             return
-
-        self.strategy_process.logger.info(f"<cal_singal>am={len(self.am)} l={last_price} min={self.last_n_min} "
-                                 f"max={self.last_n_max} open_direction={open_direction} "
-                                 )
 
         direction_position: InstrumentPosition = self.strategy_process.td_gateway.account_book.get_instrument_position(
             f'{instrument}.{self.strategy_process.td_gateway.exchange_type}', open_direction)
@@ -88,27 +88,28 @@ class BreakoutStrategy:
         self.strategy_process.logger.info(f'opposite_direction_position={opposite_direction_position}')
 
         if direction_position.volume:
+            self.strategy_process.logger.info('<cal_singal> skip  holding position')
             return
         else:
             if self.trade_first:
                 if open_direction == Direction.LONG:
-
                     if float(last_price) > self.roll_mean_list[-self.interval_period] > self.roll_mean_list[-self.interval_period * 2]:
+                        self.strategy_process.logger.info('<cal_singal> skip by ma')
                         return
-
                     trade_price = Decimal(last_price) + Decimal('0.001')
                 else:
                     if float(last_price) < self.roll_mean_list[-self.interval_period] < self.roll_mean_list[-self.interval_period * 2]:
+                        self.strategy_process.logger.info('<cal_singal> skip by ma')
                         return
                     trade_price = Decimal(last_price) - Decimal('0.001')
             else:
                 trade_price = last_price
 
             self.strategy_process.td_gateway.insert_order(instrument, OffsetFlag.OPEN, open_direction,
-                                         OrderPriceType.LIMIT, str(trade_price), self.open_volume)
+                                                          OrderPriceType.LIMIT, str(trade_price), self.open_volume)
 
             if opposite_direction_position.volume:
                 self.strategy_process.td_gateway.insert_order(instrument, OffsetFlag.CLOSE, open_direction.get_opposite_direction(),
-                                             OrderPriceType.LIMIT, str(trade_price), opposite_direction_position.volume)
+                                                              OrderPriceType.LIMIT, str(trade_price), opposite_direction_position.volume)
 
 
