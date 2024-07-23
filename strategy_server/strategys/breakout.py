@@ -91,6 +91,9 @@ class BreakoutStrategy:
             self.strategy_process.logger.info('<cal_singal> skip  holding position')
             return
         else:
+            self.strategy_process.logger.info(f'ma_data {last_price} '
+                                              f'{self.roll_mean_list[-self.interval_period]} '
+                                              f'{self.roll_mean_list[-self.interval_period * 2]}')
             if self.trade_first:
                 if open_direction == Direction.LONG:
                     if float(last_price) > self.roll_mean_list[-self.interval_period] > self.roll_mean_list[-self.interval_period * 2]:

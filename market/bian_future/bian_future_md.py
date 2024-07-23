@@ -157,7 +157,8 @@ class BiFutureMd:
         for symbol in instrument:
             self.client.kline(symbol=symbol, interval=interval)
             self.logger.info("<subscribe_kline> %s %s", interval, symbol)
-            self.sub_instrument.append(symbol)
+            if symbol not in self.sub_instrument:
+                self.sub_instrument.append(symbol)
             # 订阅过快会导致连接被服务端断开
             time.sleep(0.5)
         return True
