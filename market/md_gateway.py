@@ -23,7 +23,7 @@ class BiFutureMdGateway:
 
     def login(self):
         self.client.connect()
-        # Dingding.send_msg('行情服务启动成功')
+        Dingding.send_msg('行情服务启动成功')
 
     def get_api_configs(self):
         return {'stream_url': 'wss://fstream.binance.com'}

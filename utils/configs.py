@@ -18,7 +18,7 @@ class Configs:
                 }
 
     elif system == 'Linux':
-        root_fp = '/logs/a_songbo/'
+        root_fp = '/a_songbo/'
         api_config = {
             'recvWindow': '5000',
             'stream_url': 'wss://fstream.binance.com',

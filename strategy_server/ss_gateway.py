@@ -42,7 +42,7 @@ class BiFutureSsGateway:
         self.td_gateway.connect()
         self.logger = self.td_gateway.logger
 
-        # self.send_msg('策略服务启动成功')
+        self.send_msg('策略服务启动成功')
 
     def on_quote(self, quote):
         quote = {k: str(v) for k, v in quote.items() if v is not None}
