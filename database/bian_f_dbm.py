@@ -45,10 +45,37 @@ class AccountValue(Model):
         table_name = 'account_value'
 
 
+class TableLatestTime(Model):
+    id = AutoField(primary_key=True)
+    name = CharField()
+    update_time = DateTimeField()
+
+    class Meta:
+        database = SqliteDatabaseManage().get_connect()
+        table_name = 'tables_latest_update_time'
+
+
+class Subtest(Model):
+    id = AutoField(primary_key=True)
+    balance = FloatField()
+    update_time = DateTimeField()
+
+    class Meta:
+        database = SqliteDatabaseManage().get_connect()
+        table_name = 'sub_table'
+
+
 if __name__ == '__main__':
     # RtnTrade.create_table()
-    AccountValue.create_table()
+    # AccountValue.create_table()
+    # Subtest.create_table()
+    # TableLatestTime.create_table()
 
+    save_data = Subtest(
+        balance=1,
+        update_time=datetime.now(),
+    )
+    save_data.save()
 
     # save_rtn_trade = RtnTrade(
     #             instrument='instrument',

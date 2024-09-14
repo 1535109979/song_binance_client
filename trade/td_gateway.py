@@ -13,8 +13,8 @@ from song_binance_client.utils.sys_exception import common_exception
 
 
 class BiFutureTdGateway:
-    def __init__(self):
-        self.create_logger()
+    def __init__(self, ss_gateway):
+        self.logger = ss_gateway.logger
         self.client = BiFutureTd(self)
         self.account_book = self.client.account_book
         self.open_orders_map = {}
@@ -23,6 +23,7 @@ class BiFutureTdGateway:
     def connect(self):
         self.client.connect()
 
+    @common_exception(log_flag=True)
     def insert_order(self, instrument: str, offset_flag: OffsetFlag, direction: Direction,
                       order_price_type: OrderPriceType, price: float, volume: float,
                       cancel_delay_seconds: int = 0, **kwargs) -> str:
@@ -40,42 +41,17 @@ class BiFutureTdGateway:
             'volume': volume,
             'cancel_delay_seconds': cancel_delay_seconds,
         }
-
+        self.logger.info(f'<insert_order> instrument={instrument} offset_flag={offset_flag} direction={direction} '
+                         f'order_price_type={order_price_type} price={price} volume={volume}')
         client_order_id = self.client.insert_order(
             **req, **kwargs)
 
-        # self.open_orders_map[client_order_id] = req
-
-        # if not self.trade_order_timer:
-        #     self.trade_order_timer = AioTimer.new_timer(_delay=60, _func=self.trade_order)
-
         return client_order_id
-
-    @common_exception(log_flag=True)
-    def trade_order(self):
-        # 扫单
-        self.trade_order_timer = None
-        self.logger.info(f'<trade_order> open_orders_map={self.open_orders_map}')
-
-        if self.open_orders_map:
-            for k, v in copy(self.open_orders_map).items():
-                if v['direction'] == Direction.LONG:
-                    if v['offset_flag'] == OffsetFlag.OPEN:
-                        price = str(round(float(v['price']) + 0.01, 3))
-                    else:
-                        price = str(round(float(v['price']) - 0.01, 3))
-                else:
-                    if v['offset_flag'] == OffsetFlag.OPEN:
-                        price = str(round(float(v['price']) - 0.01, 3))
-                    else:
-                        price = str(round(float(v['price']) + 0.01, 3))
-
-                v['price'] = price
-                self.cancel_cancel_all_order(v['instrument'])
-                self.insert_order(**v)
 
     def on_order(self, rtn_order):
         pass
+
+    @common_exception(log_flag=True)
     def on_trade(self, rtn_trade):
         save_rtn_trade = RtnTrade(
             instrument=rtn_trade.instrument,
@@ -109,6 +85,7 @@ class BiFutureTdGateway:
         self.logger.info(f"<send_start_msg> {login_reqid}")
         self.send_msg(f"<send_start_msg> {login_reqid}")
 
+    @common_exception(log_flag=True)
     def on_account_update(self):
         account_value = AccountValue(
             balance=self.account_book.balance,
@@ -123,14 +100,6 @@ class BiFutureTdGateway:
 
     def gen_error_order_id(self, err_msg):
         self.send_msg(err_msg)
-
-    def create_logger(self):
-        self.logger = logging.getLogger('bi_future_ts')
-        self.logger.setLevel(logging.DEBUG)
-        file_handler = logging.FileHandler(Configs.root_fp + 'song_binance_client/logs/bi_future_ts.log')
-        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-        file_handler.setFormatter(formatter)
-        self.logger.addHandler(file_handler)
 
     @property
     def exchange_type(self):

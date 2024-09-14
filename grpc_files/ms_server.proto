@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+
+service AsyncMarketServer{
+  rpc GetQuoteStream(Symbols) returns (stream Quote);
+  rpc AddSubscribe(Symbols) returns (FlagReply);
+  rpc StopEngine(FlagReply) returns (FlagReply);
+}
+
+message Symbols {
+    repeated string symbols = 1;
+}
+
+message Quote{
+  map<string, string> quote = 1;
+}
+
+message FlagReply {
+    bool flag = 1;
+}

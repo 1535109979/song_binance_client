@@ -31,15 +31,27 @@ class Configs:
 
     strategy_list = [
         {'instrument': 'EOSUSDT',
-         'breakout': {'open_direction': 'LONG', 'windows': 400, 'open_volume': 30,
-                    'interval_period': 120, 'roll_mean_period': 200},
-         'stop_loss': {'stop_loss_rate': 0.1}
+         'strategy_name': 'breakout',
+         'cash': 10,
+         'open_direction': 'LONG',
+         'windows': 400,
+         'open_volume': 30,
+         'interval_period': 120,
+         'roll_mean_period': 200,
+         'stop_loss': 0
          },
 
         # {'instrument': 'LTCUSDT',
-        #  'params': {'open_direction': 'LONG', 'windows': 30, 'open_volume': 30,
-        #             'interval_period': 120, 'roll_mean_period': 200}
-        #  }
+        #  'strategy_name': 'breakout',
+        #  'cash': 10,
+        #  'open_direction': 'LONG',
+        #  'windows': 400,
+        #  'open_volume': 30,
+        #  'interval_period': 120,
+        #  'roll_mean_period': 200,
+        #  'stop_loss': 0
+        #  },
+
     ]
 
 

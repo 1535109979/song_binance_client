@@ -415,6 +415,7 @@ class BiFutureTd:
                             client_order_id=client_order_id))
         return client_order_id
 
+    @common_exception(log_flag=True)
     def _new_order(self, instrument: str, offset_flag: OffsetFlag, direction: Direction,
                    order_price_type: OrderPriceType, price: float, volume: float,
                    client_order_id: str, cancel_delay_seconds: int = 0, **kwargs):

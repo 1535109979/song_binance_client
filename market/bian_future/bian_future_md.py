@@ -5,6 +5,7 @@ import json
 import time
 
 from binance.websocket.websocket_client import BinanceWebsocketClient
+from binance.um_futures import UMFutures
 
 from song_binance_client.utils.aio_timer import AioTimer
 from song_binance_client.utils.sys_exception import common_exception
@@ -66,6 +67,8 @@ class BiFutureMd:
             on_message=self._on_message)
 
         self.logger.info("<create_client> %s %s %s", self.reqUserLoginId, self.client, self.configs)
+
+        self.kline_client = UMFutures()
 
     def _reconnect(self):
         self.logger.info("<reconnect> %s %s", self.reqUserLoginId, self.client)
@@ -153,13 +156,12 @@ class BiFutureMd:
         if not self.client:
             self.logger.error("!!! cannot subscribe !!! client=%s", self.client)
             return False
-
         for symbol in instrument:
-            self.client.kline(symbol=symbol, interval=interval)
             self.logger.info("<subscribe_kline> %s %s", interval, symbol)
+            self.client.kline(symbol=symbol, interval=interval)
             if symbol not in self.sub_instrument:
                 self.sub_instrument.append(symbol)
-            # 订阅过快会导致连接被服务端断开
+
             time.sleep(0.5)
         return True
 

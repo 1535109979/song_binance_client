@@ -1,11 +1,16 @@
+import numpy
+
 from song_binance_client.trade.do.position import InstrumentPosition
 from song_binance_client.utils.exchange_enum import Direction, OffsetFlag, OrderPriceType
 from decimal import Decimal
+
+from song_binance_client.utils.sys_exception import common_exception
 
 
 class BreakoutStrategy:
     def __init__(self, strategy_process, params):
         self.strategy_process = strategy_process
+        self.logger = self.strategy_process.logger
 
         self.open_direction = Direction.LONG
         self.windows = params['windows']
@@ -16,22 +21,38 @@ class BreakoutStrategy:
 
         self.am = []
         self.roll_mean_list = []
-        self.last_n_min = self.last_n_max = None
+        self.last_n_min = None
+        self.last_n_max = None
 
-        self.trade_first = True
+        self.regressio_flag = None
+        self.trend_flag = None
 
+        self.load_last_price()
+
+    def load_last_price(self):
+        for c in self.strategy_process.latest_price_list:
+            self.am.append(c)
+
+        price_ma_list = numpy.convolve(
+                self.am, numpy.ones(self.roll_mean_period) / self.roll_mean_period, mode="valid")
+        self.roll_mean_list += list(price_ma_list)
+
+    @common_exception(log_flag=True)
     def cal_indicator(self, quote):
+        self.regressio_flag = None
+        self.trend_flag = None
+
         if not quote.get('is_closed', 0):
             return
 
-        last_price = quote['last_price']
+        last_price = float(quote['last_price'])
 
-        if len(self.am) < self.windows:
+        if len(self.am) < self.min_save_window:
             self.am.append(last_price)
             if len(self.am) >= self.roll_mean_period:
                 roll_mean = round(sum([float(x) for x in self.am[-self.roll_mean_period:]]) / self.roll_mean_period, 8)
                 self.roll_mean_list.append(roll_mean)
-
+            self.logger.info(f'<cal_indicator> less price: min_save_window={self.min_save_window} len am:{len(self.am)}')
             return
 
         self.am = self.am[-self.min_save_window:]
@@ -43,76 +64,85 @@ class BreakoutStrategy:
         self.roll_mean_list.append(roll_mean)
         self.roll_mean_list = self.roll_mean_list[-self.interval_period * 2:]
 
-    def cal_singal(self, quote):
-        # 止损后 清空am 隔段时间再交易
-        if self.strategy_process.stop_loss_flag:
-            self.am = []
-            self.roll_mean_list = []
-            self.strategy_process.logger.info('<cal_singal> after stop_loss clear am')
-            self.strategy_process.stop_loss_flag = False
+        if last_price < self.last_n_min:
+            self.regressio_flag = 'LONG'
+        elif last_price > self.last_n_max:
+            self.regressio_flag = 'SHORT'
 
+        if last_price > self.roll_mean_list[-self.interval_period] > self.roll_mean_list[-self.interval_period * 2]:
+            self.trend_flag = 'LONG'
+        elif last_price < self.roll_mean_list[-self.interval_period] < self.roll_mean_list[-self.interval_period * 2]:
+            self.trend_flag = 'SHORT'
+
+        self.logger.info(f'<cal_indicator> l={last_price} min={self.last_n_min} max={self.last_n_max} '
+                         f'regressio_flag={self.regressio_flag} trend_flag={self.trend_flag}')
+
+    @common_exception(log_flag=True)
+    def cal_singal(self, quote):
         if not quote.get('is_closed', 0):
             return
 
-        last_price = quote['last_price']
-        instrument = quote['symbol']
-
-        if not self.last_n_min:
-            self.strategy_process.logger.info(f'<cal_singal> ignore no last_n_min am_len={len(self.am)}')
-            return
-
-        if len(self.roll_mean_list) < self.interval_period * 2:
-            self.strategy_process.logger.info(f'<cal_singal> ignore roll_mean_list={len(self.roll_mean_list)}')
-            return
-
-        # 开仓方向
         open_direction = None
-        if last_price < self.last_n_min:
-            open_direction = self.open_direction
-        elif last_price > self.last_n_max:
-            open_direction = self.open_direction.get_opposite_direction()
+        if not self.regressio_flag:
+            pass
+        else:
+            if self.regressio_flag == 'LONG':
+                if self.trend_flag == 'SHORT':
+                    self.logger.info(f'<cal_singal> skip by ma: regressio_flag={self.regressio_flag} '
+                                     f'trend_flag={self.trend_flag}')
+                    return
 
-        self.strategy_process.logger.info(f"<cal_singal>am={len(self.am)} l={last_price} min={self.last_n_min} "
-                                          f"max={self.last_n_max} open_direction={open_direction} "
-                                          )
+                open_direction = self.open_direction
+            elif self.regressio_flag == 'SHORT':
+                if self.trend_flag == 'LONG':
+                    self.logger.info(f'<cal_singal> skip by ma: regressio_flag={self.regressio_flag} '
+                                     f'trend_flag={self.trend_flag}')
+                    return
+                open_direction = self.open_direction.get_opposite_direction()
 
         if not open_direction:
             return
 
+        instrument = quote['symbol']
+        last_price = quote['last_price']
+
         direction_position: InstrumentPosition = self.strategy_process.td_gateway.account_book.get_instrument_position(
             f'{instrument}.{self.strategy_process.td_gateway.exchange_type}', open_direction)
+        self.logger.info(f'direction_position={direction_position}')
+
         opposite_direction_position: InstrumentPosition = self.strategy_process.td_gateway.account_book.get_instrument_position(
             f'{instrument}.{self.strategy_process.td_gateway.exchange_type}', open_direction.get_opposite_direction())
+        self.logger.info(f'opposite_direction_position={opposite_direction_position}')
 
-        self.strategy_process.logger.info(f'direction_position={direction_position}')
-        self.strategy_process.logger.info(f'opposite_direction_position={opposite_direction_position}')
+        # open_direction = self.open_direction
+        # trade_price = Decimal(last_price) - Decimal('0.005')
+        # self.strategy_process.td_gateway.insert_order(instrument, OffsetFlag.OPEN, open_direction,
+        #                                               OrderPriceType.LIMIT, str(trade_price), self.open_volume)
+        # print('---- send ----')
+        # return
 
         if direction_position.volume:
             self.strategy_process.logger.info('<cal_singal> skip  holding position')
             return
         else:
-            self.strategy_process.logger.info(f'ma_data {last_price} '
-                                              f'{self.roll_mean_list[-self.interval_period]} '
-                                              f'{self.roll_mean_list[-self.interval_period * 2]}')
-            if self.trade_first:
-                if open_direction == Direction.LONG:
-                    if float(last_price) > self.roll_mean_list[-self.interval_period] > self.roll_mean_list[-self.interval_period * 2]:
-                        self.strategy_process.logger.info('<cal_singal> skip by ma')
-                        return
-                    trade_price = Decimal(last_price) + Decimal('0.001')
-                else:
-                    if float(last_price) < self.roll_mean_list[-self.interval_period] < self.roll_mean_list[-self.interval_period * 2]:
-                        self.strategy_process.logger.info('<cal_singal> skip by ma')
-                        return
-                    trade_price = Decimal(last_price) - Decimal('0.001')
+            if open_direction == Direction.LONG:
+                trade_price = Decimal(last_price) + Decimal('0.005')
             else:
-                trade_price = last_price
+                trade_price = Decimal(last_price) - Decimal('0.005')
 
             self.strategy_process.td_gateway.insert_order(instrument, OffsetFlag.OPEN, open_direction,
                                                           OrderPriceType.LIMIT, str(trade_price), self.open_volume)
+            self.strategy_process.logger.info(f'<cal_singal> insert_order  instrument={instrument} '
+                                              f'OffsetFlag={OffsetFlag} open_direction={open_direction} '
+                                              f'OrderPriceType={OrderPriceType} price={str(trade_price)} '
+                                              f'volume={self.open_volume}')
 
             if opposite_direction_position.volume:
                 self.strategy_process.td_gateway.insert_order(instrument, OffsetFlag.CLOSE, open_direction.get_opposite_direction(),
                                                               OrderPriceType.LIMIT, str(trade_price), opposite_direction_position.volume)
+                self.strategy_process.logger.info(f'<cal_singal> insert_order  instrument={instrument} '
+                                                  f'OffsetFlag={OffsetFlag.CLOSE} open_direction={open_direction.get_opposite_direction()} '
+                                                  f'OrderPriceType={OrderPriceType} price={str(trade_price)} '
+                                                  f'volume={opposite_direction_position.volume} ')
 
 
