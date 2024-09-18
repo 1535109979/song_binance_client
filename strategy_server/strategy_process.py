@@ -55,7 +55,7 @@ class StrategyProcess:
         self.latest_price_list = df['close'].astype(float).to_list()
 
     def create_logger(self):
-        self.logger = logging.getLogger('bi_future_strategy')
+        self.logger = logging.getLogger(f'bi_future_strategy_{self.params["instrument"]}')
         self.logger.setLevel(logging.DEBUG)
         log_fp = Configs.root_fp + f'song_binance_client/logs/strategy_logs/{self.params["instrument"]}.log'
 
