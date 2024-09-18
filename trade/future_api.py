@@ -9,6 +9,7 @@ from binance.um_futures import UMFutures
 from binance.websocket.um_futures.websocket_client import UMFuturesWebsocketClient
 
 from song_binance_client.trade.do.account import AccountBook
+from song_binance_client.trade.do.instrument_book import InstrumentBook
 from song_binance_client.trade.do.position import InstrumentPosition
 from song_binance_client.trade.do.rtn_order import RtnOrder
 from song_binance_client.trade.do.rtn_trade import RtnTrade
@@ -38,7 +39,6 @@ class BiFutureTd:
         self.on_data_thread_pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix="td")
 
         self.account_book = AccountBook()
-
         self.order_ref_id: int = 0
 
         # 已初始化好的标的列表 (完成启动后撤单等动作)
@@ -73,7 +73,20 @@ class BiFutureTd:
 
         self.query_account()
 
+        self.query_instruments()
+
         self._start_listen()
+
+    def query_instruments(self):
+        data = self.client.exchange_info()
+
+        symbols_data = [
+            symbol_data for symbol_data in data.get("symbols", [])
+            if self.account_book.base_instrument == symbol_data.get("quoteAsset")]
+        for d in symbols_data:
+            instrument_book: InstrumentBook = self.account_book.get_instrument_book(
+                f'{d["symbol"]}.{self.gateway.exchange_type}')
+            instrument_book.update_data(data=d)
 
     def _create_client(self):
         return UMFutures(key=self.configs["api_key"], secret=self.configs["secret_key"],

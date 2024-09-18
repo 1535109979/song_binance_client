@@ -31,6 +31,11 @@ class BiFutureTdGateway:
         做多开仓=OPEN:LONG    做空开仓=OPEN:SHORT
         做多平仓=CLOSE:LONG   做空平仓=CLOSE:SHORT
         """
+        instrument_book = self.account_book.get_instrument_book(instrument + f'.{self.exchange_type}')
+        min_volume_step = int(1 / float(instrument_book.min_volume_step))
+        if 'cash' in kwargs:
+            volume = kwargs['cash'] / float(price)
+            volume = round(volume * min_volume_step) / min_volume_step
 
         req = {
             'instrument': instrument,
@@ -38,7 +43,7 @@ class BiFutureTdGateway:
             'direction': direction,
             'order_price_type': order_price_type,
             'price': price,
-            'volume': volume,
+            'volume': str(volume),
             'cancel_delay_seconds': cancel_delay_seconds,
         }
         self.logger.info(f'<insert_order> instrument={instrument} offset_flag={offset_flag} direction={direction} '

@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Dict
 
+from song_binance_client.trade.do.instrument_book import InstrumentBook
 from song_binance_client.trade.do.position import InstrumentPositionBook, InstrumentPosition
 from song_binance_client.trade.do.rtn_trade import RtnTrade
 from song_binance_client.utils import type_util
@@ -20,13 +21,24 @@ class AccountBook:
     position_books: Dict[str, InstrumentPositionBook] = field(default_factory=dict)
 
     # 合约属性字典 { vt_symbol: InstrumentBook }
-    # instrument_books: Dict[str, InstrumentBook] = field(default_factory=dict)
+    instrument_books: Dict[str, InstrumentBook] = field(default_factory=dict)
 
     def update_data(self, data):
         self.avail = type_util.get_precision_number(
             number=data.get("availableBalance"), precision=8, default=0)
         self.balance = type_util.get_precision_number(
             number=data.get("walletBalance"), precision=8, default=0)
+
+    def create_instrument_book(self, vt_symbol: str):
+        return InstrumentBook(vt_symbol=vt_symbol)
+
+    def get_instrument_book(self, vt_symbol: str) -> InstrumentBook:
+        """ 获取合约属性 """
+        instrument_book: InstrumentBook = self.instrument_books.get(vt_symbol)
+        if not instrument_book:
+            instrument_book = self.create_instrument_book(vt_symbol)
+            self.instrument_books.setdefault(vt_symbol, instrument_book)
+        return instrument_book
 
     def get_instrument_position_book(self, vt_symbol: str) -> InstrumentPositionBook:
         """ 获取合约持仓信息 """

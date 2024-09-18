@@ -12,6 +12,7 @@ class BreakoutStrategy:
         self.strategy_process = strategy_process
         self.logger = self.strategy_process.logger
 
+        self.params = params
         self.open_direction = Direction.LONG
         self.windows = params['windows']
         self.open_volume = params['open_volume']
@@ -79,6 +80,17 @@ class BreakoutStrategy:
 
     @common_exception(log_flag=True)
     def cal_singal(self, quote):
+        instrument = quote['symbol']
+        last_price = quote['last_price']
+
+        open_direction = self.open_direction
+        trade_price = Decimal(last_price) - Decimal('0.005')
+        self.strategy_process.td_gateway.insert_order(instrument, OffsetFlag.OPEN, open_direction,
+                                                      OrderPriceType.LIMIT, str(trade_price), self.open_volume,
+                                                      cash=self.params['roll_mean_period'])
+        # print('---- send ----')
+        return
+
         if not quote.get('is_closed', 0):
             return
 
@@ -103,9 +115,6 @@ class BreakoutStrategy:
         if not open_direction:
             return
 
-        instrument = quote['symbol']
-        last_price = quote['last_price']
-
         direction_position: InstrumentPosition = self.strategy_process.td_gateway.account_book.get_instrument_position(
             f'{instrument}.{self.strategy_process.td_gateway.exchange_type}', open_direction)
         self.logger.info(f'direction_position={direction_position}')
@@ -113,13 +122,6 @@ class BreakoutStrategy:
         opposite_direction_position: InstrumentPosition = self.strategy_process.td_gateway.account_book.get_instrument_position(
             f'{instrument}.{self.strategy_process.td_gateway.exchange_type}', open_direction.get_opposite_direction())
         self.logger.info(f'opposite_direction_position={opposite_direction_position}')
-
-        # open_direction = self.open_direction
-        # trade_price = Decimal(last_price) - Decimal('0.005')
-        # self.strategy_process.td_gateway.insert_order(instrument, OffsetFlag.OPEN, open_direction,
-        #                                               OrderPriceType.LIMIT, str(trade_price), self.open_volume)
-        # print('---- send ----')
-        # return
 
         if direction_position.volume:
             self.strategy_process.logger.info('<cal_singal> skip  holding position')
