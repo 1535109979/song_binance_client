@@ -82,7 +82,7 @@ class BreakoutStrategy:
     def cal_singal(self, quote):
         instrument = quote['symbol']
         last_price = quote['last_price']
-        print('cal_singal', self.logger.name, self.params, self.min_save_window)
+        # print('cal_singal', self.logger.name, self.params, self.min_save_window)
         # open_direction = self.open_direction
         # trade_price = Decimal(last_price) - Decimal('0.005')
         # self.strategy_process.td_gateway.insert_order(instrument, OffsetFlag.OPEN, open_direction,
@@ -94,7 +94,8 @@ class BreakoutStrategy:
         if not quote.get('is_closed', 0):
             return
 
-        self.strategy_process.logger.info(f'<cal_singal> skip  holding position')
+        self.strategy_process.logger.info(f'<cal_singal> regressio_flag={self.regressio_flag} '
+                                          f'trend_flag={self.trend_flag}')
 
         open_direction = None
         if not self.regressio_flag:
