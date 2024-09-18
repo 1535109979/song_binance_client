@@ -49,7 +49,8 @@ class BiFutureMdGateway:
 
     def send_quote(self, q, quote):
         try:
-            asyncio.run_coroutine_threadsafe(q.writer.write(self.create_grpc_reply(quote=quote)), self.loop)
+            future = asyncio.run_coroutine_threadsafe(q.writer.write(self.create_grpc_reply(quote=quote)), self.loop)
+            future.result()
         except:
             traceback.print_exc()
 
