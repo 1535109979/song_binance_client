@@ -46,6 +46,7 @@ class BiFutureMdGateway:
             for p, q in self.quote_subscriber.items():
                 if quote['symbol'] in q.subscribe_symbol:
                     self.send_quote(q, quote)
+        self.logger.info(f'{quote["symbol"]} {quote["ms_gateway_timestamp"]}')
 
     def send_quote(self, q, quote):
         try:
