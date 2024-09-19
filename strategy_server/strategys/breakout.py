@@ -74,7 +74,6 @@ class BreakoutStrategy:
             self.trend_flag = Direction.LONG
         elif last_price < self.roll_mean_list[-self.interval_period] < self.roll_mean_list[-self.interval_period * 2]:
             self.trend_flag = Direction.SHORT
-        self.logger.info('--')
         self.logger.info(f'<cal_indicator> l={last_price} min={self.last_n_min} max={self.last_n_max} '
                          f'{self.roll_mean_list[-self.interval_period]} '
                          f'{self.roll_mean_list[-self.interval_period * 2]} '
@@ -89,7 +88,7 @@ class BreakoutStrategy:
         # trade_price = Decimal(last_price) - Decimal('0.005')
         # self.strategy_process.td_gateway.insert_order(instrument, OffsetFlag.OPEN, open_direction,
         #                                               OrderPriceType.LIMIT, str(trade_price), self.open_volume,
-        #                                               cash=self.params['roll_mean_period'])
+        #                                               cash=self.params['cash'])
         # # print('---- send ----')
         # return
 
@@ -127,14 +126,14 @@ class BreakoutStrategy:
                     self.strategy_process.logger.info(f'<cal_singal> insert_order  instrument={instrument} '
                                                       f'OffsetFlag=close '
                                                       f'direction={self.regressio_flag.get_opposite_direction()} '
-                                                      f'OrderPriceType={OrderPriceType} price={str(last_price)} '
+                                                      f'OrderPriceType={OrderPriceType.LIMIT} price={str(last_price)} '
                                                       f'volume={opposite_direction_position.volume} ')
 
                 self.strategy_process.td_gateway.insert_order(instrument, OffsetFlag.OPEN, self.regressio_flag,
                                                               OrderPriceType.LIMIT, str(last_price), self.open_volume,
-                                                              cash=self.params['roll_mean_period'])
+                                                              cash=self.params['cash'])
                 self.strategy_process.logger.info(f'<cal_singal> insert_order  instrument={instrument} '
                                                   f'OffsetFlag=open direction={self.regressio_flag} '
                                                   f'OrderPriceType={OrderPriceType} price={str(last_price)} '
-                                                  f'volume={self.open_volume}')
+                                                  f'volume={self.open_volume} cash={self.params["cash"]}')
 

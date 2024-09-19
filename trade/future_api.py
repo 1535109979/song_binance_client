@@ -278,8 +278,7 @@ class BiFutureTd:
             return
 
         func_name = f"_on_user_data_{e}"
-        process_func = hasattr(self, func_name)
-        if process_func:
+        if hasattr(self, func_name):
             self.logger.info(d)
             # 放入线程池处理, 防止阻塞服务器回调
             # process_func(d)

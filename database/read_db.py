@@ -11,7 +11,7 @@ import pandas as pd
 #
 # df.to_csv('trade.csv')
 
-with sqlite3.connect('bian_f_data.db') as conn:
-    df = pd.read_sql('select * from account_value', conn)
-    print(df)
+# with sqlite3.connect('bian_f_data.db') as conn:
+#     df = pd.read_sql('select * from rtn_trade', conn)
+#     print(df)
 
