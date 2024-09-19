@@ -2,6 +2,7 @@ import logging
 import time
 from copy import copy
 from datetime import datetime
+from decimal import Decimal
 
 from song_binance_client.database.bian_f_dbm import RtnTrade, AccountValue
 from song_binance_client.trade.future_api import BiFutureTd
@@ -32,22 +33,38 @@ class BiFutureTdGateway:
         做多平仓=CLOSE:LONG   做空平仓=CLOSE:SHORT
         """
         instrument_book = self.account_book.get_instrument_book(instrument + f'.{self.exchange_type}')
-        min_volume_step = int(1 / float(instrument_book.min_volume_step))
+        min_volume_muti = int(1 / float(instrument_book.min_volume_step))
+        min_price_step = instrument_book.min_price_step
+
+        if offset_flag == OffsetFlag.OPEN:
+            if direction == Direction.LONG:
+                trade_price = Decimal(price) + Decimal(min_price_step) * 10
+            elif direction == Direction.SHORT:
+                trade_price = Decimal(price) - Decimal(min_price_step) * 10
+        elif offset_flag == OffsetFlag.CLOSE:
+            if direction == Direction.LONG:
+                trade_price = Decimal(price) - Decimal(min_price_step) * 10
+            elif direction == Direction.SHORT:
+                trade_price = Decimal(price) + Decimal(min_price_step) * 10
+
         if 'cash' in kwargs:
             volume = kwargs['cash'] / float(price)
-            volume = round(volume * min_volume_step) / min_volume_step
+            volume = round(volume * min_volume_muti) / min_volume_muti
+            self.logger.info(f'cal vol: min_volume_muti={min_volume_muti} cash={kwargs["cash"]} '
+                             f'price={trade_price} volume={volume}')
 
         req = {
             'instrument': instrument,
             'offset_flag': offset_flag,
             'direction': direction,
             'order_price_type': order_price_type,
-            'price': price,
+            'price': str(trade_price),
             'volume': str(volume),
             'cancel_delay_seconds': cancel_delay_seconds,
         }
         self.logger.info(f'<insert_order> instrument={instrument} offset_flag={offset_flag} direction={direction} '
-                         f'order_price_type={order_price_type} price={price} volume={volume}')
+                         f'order_price_type={order_price_type} trade_price={trade_price} volume={volume}')
+
         client_order_id = self.client.insert_order(
             **req, **kwargs)
 

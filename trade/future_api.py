@@ -476,13 +476,13 @@ class BiFutureTd:
             self._updates_rtn_data(data=req_data, instrument=instrument))
         self.rtn_order_map[client_order_id] = rtn_order
 
-        try:
-            result: dict = self.client.new_order(**req)
-            self.logger.info(f"<new_order> result={result}")
+        # try:
+        result: dict = self.client.new_order(**req)
+        self.logger.info(f"<new_order> result={result}")
 
             # rtn_order.update_by_insert_result(data=result)
-        except ClientError as e:
-            self.logger.exception("!!! new_order error:%s !!!", e)
+        # except ClientError as e:
+        #     self.logger.exception("!!! new_order error:%s !!!", e)
 
     def _updates_rtn_data(self, data: dict, instrument: str = None):
         data["trading_day"] = self.trading_day

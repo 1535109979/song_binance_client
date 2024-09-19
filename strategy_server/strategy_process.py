@@ -1,4 +1,5 @@
 import logging
+import time
 from datetime import datetime, timedelta
 
 import pandas
@@ -6,6 +7,7 @@ import pandas
 from song_binance_client.strategy_server.strategys.breakout import BreakoutStrategy
 from song_binance_client.strategy_server.strategys.stop_cover import StopLoss
 from song_binance_client.utils.configs import Configs
+from song_binance_client.utils.sys_exception import common_exception
 
 
 class StrategyProcess:
@@ -14,7 +16,7 @@ class StrategyProcess:
         self.gateway = gateway
         self.td_gateway = self.gateway.td_gateway
         self.logger = None
-        self.latest_price_list = None
+        self.latest_price_list = []
         self.params = params
 
         self.strategy_list = []
@@ -27,8 +29,8 @@ class StrategyProcess:
         #     self.strategy_list.append(StopLoss(self, self.strategy_config['stop_loss']))
         if self.params['strategy_name'] == 'breakout':
             self.get_klines()
-
-            self.strategy_list.append(BreakoutStrategy(self, self.params))
+            b = BreakoutStrategy(self, self.params)
+            self.strategy_list.append(b)
 
     def on_quote(self, quote):
         # quote['last_price'] = float(quote['last_price'])
@@ -40,19 +42,31 @@ class StrategyProcess:
         for strategy in self.strategy_list:
             strategy.cal_singal(quote)
 
-    def get_klines(self):
-        data = self.gateway.kline_client.klines(self.params['instrument'], "1m", limit=1000)
+    def get_klines(self, min_save_window=2100):
+        st_time = int(time.time()) - min_save_window * 60
+        end_time = int(time.time())
+        self.download_data(st_time, end_time, self.params['instrument'], "1m")
 
+    @common_exception(log_flag=True)
+    def download_data(self, start_time, end_time, symbol='BTCUSDT', interval='1m'):
+        st_time = start_time
+
+        while st_time < end_time:
+            df = self.get_future_data(st_time, symbol, interval)
+            self.latest_price_list += df['close'].astype(float).to_list()
+            st_time = st_time + 1000 * 60
+
+    def get_future_data(self, st_time, symbol='BTCUSDT', interval='1m'):
+        data = self.gateway.kline_client.klines(symbol, interval, limit=1000, startTime=int(st_time) * 1000)
         df = pandas.DataFrame(data)
         df.columns = ['start_time', 'open', 'high', 'low', 'close', 'vol', 'end_time',
                       'quote_asset_vol', 'number_of_trade', 'base_asset_volume', 'quote_asset_volume', 'n']
         df['start_time'] = df['start_time'].apply(lambda x: datetime.fromtimestamp(x / 1000))
         df['close_time'] = df['start_time'].apply(lambda x: x + timedelta(minutes=1))
-
         df['end_time'] = df['end_time'].apply(lambda x: datetime.fromtimestamp(x / 1000))
         df = df.sort_values(by='close_time')
         df = df[df['close_time'] <= datetime.now()]
-        self.latest_price_list = df['close'].astype(float).to_list()
+        return df
 
     def create_logger(self):
         self.logger = logging.getLogger(f'bi_future_strategy_{self.params["instrument"]}')

@@ -10,7 +10,6 @@ from song_binance_client.trade.td_gateway import BiFutureTdGateway
 from song_binance_client.utils.configs import Configs
 from song_binance_client.utils.dingding import Dingding
 from song_binance_client.utils.sys_exception import common_exception
-from song_binance_client.utils.thread import submit
 
 
 class BiFutureSsGateway:
