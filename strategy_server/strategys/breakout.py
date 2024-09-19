@@ -74,10 +74,10 @@ class BreakoutStrategy:
             self.trend_flag = Direction.LONG
         elif last_price < self.roll_mean_list[-self.interval_period] < self.roll_mean_list[-self.interval_period * 2]:
             self.trend_flag = Direction.SHORT
-
+        self.logger.info('--')
         self.logger.info(f'<cal_indicator> l={last_price} min={self.last_n_min} max={self.last_n_max} '
                          f'{self.roll_mean_list[-self.interval_period]} '
-                         f'{self.roll_mean_list[-self.interval_period * 2]}'
+                         f'{self.roll_mean_list[-self.interval_period * 2]} '
                          f'regressio_flag={self.regressio_flag} trend_flag={self.trend_flag}')
 
     @common_exception(log_flag=True)
