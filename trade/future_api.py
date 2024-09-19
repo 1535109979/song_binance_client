@@ -278,12 +278,12 @@ class BiFutureTd:
             return
 
         func_name = f"_on_user_data_{e}"
-        process_func = getattr(self, func_name)
+        process_func = hasattr(self, func_name)
         if process_func:
             self.logger.info(d)
             # 放入线程池处理, 防止阻塞服务器回调
             # process_func(d)
-            submit(_executor=self.on_data_thread_pool, _fn=process_func, _kwargs=dict(data=d))
+            submit(_executor=self.on_data_thread_pool, _fn=getattr(self, func_name), _kwargs=dict(data=d))
         else:
             self.logger.warning("Cannot process user_data !! %s", data)
 

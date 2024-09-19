@@ -17,6 +17,7 @@ class BiFutureMdGateway:
         self.quote_subscriber = dict()
         self.create_logger()
         self.loop = events.new_event_loop()
+        self.last_quote = {}
 
         self.client = BiFutureMd(self)
         self.login()
