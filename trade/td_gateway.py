@@ -109,6 +109,14 @@ class BiFutureTdGateway:
         )
         save_rtn_trade.save()
 
+    def on_query_account(self, data):
+        total_balance = data['totalCrossWalletBalance']
+        save_balance_data = AccountValue(
+            balance=total_balance,
+            update_time=datetime.now(),
+        )
+        save_balance_data.save()
+
     def cancel_cancel_all_order(self, instrument):
         self.client.cancel_all_order(instrument)
 

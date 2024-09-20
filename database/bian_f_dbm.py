@@ -91,17 +91,28 @@ class Subtest(Model):
 
 if __name__ == '__main__':
     # RtnTrade.create_table()
-    AccountValue.create_table()
     # Subtest.create_table()
     # TableLatestTime.create_table()
-    OrderInfo.create_table()
-    TradeInfo.create_table()
 
-    # save_data = Subtest(
+    # AccountValue.create_table()
+    # OrderInfo.create_table()
+    # TradeInfo.create_table()
+
+    # account_values = AccountValue.select()
+    # for account in account_values:
+    #     print(account.balance, account.update_time)
+
+    # save_data = AccountValue(
     #     balance=1,
     #     update_time=datetime.now(),
     # )
     # save_data.save()
+
+    # AccountValue.delete().where(AccountValue.id == 1).execute()
+
+    account = AccountValue.get(AccountValue.id == 7)
+    account.balance = 12344
+    account.save()
 
     # save_rtn_trade = RtnTrade(
     #             instrument='instrument',

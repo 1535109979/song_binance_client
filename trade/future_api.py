@@ -203,6 +203,7 @@ class BiFutureTd:
             self.logger.warning("当前状态不能发起请求! ready:%s client:%s", self.ready, self.client)
             return
         data: dict = self.client.account(**self._get_req_data())
+        self.gateway.on_query_account(data)
         # self.logger.debug("<query_account> data.keys=%s", data.keys())
         # self.account_book.update_data(data)
         self._on_assets_data(data=data.get("assets"))
