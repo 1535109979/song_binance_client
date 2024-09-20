@@ -20,6 +20,7 @@ class SqliteDatabaseManage:
 class TradeInfo(Model):
     id = AutoField(primary_key=True)
     instrument = CharField()
+    order_id = CharField()
     client_id = CharField()
     offset = CharField()
     side = CharField()
@@ -40,6 +41,7 @@ class TradeInfo(Model):
 class OrderInfo(Model):
     id = AutoField(primary_key=True)
     instrument = CharField()
+    order_id = CharField()
     client_id = CharField()
     offset = CharField()
     side = CharField()
@@ -89,7 +91,7 @@ class Subtest(Model):
 
 if __name__ == '__main__':
     # RtnTrade.create_table()
-    # AccountValue.create_table()
+    AccountValue.create_table()
     # Subtest.create_table()
     # TableLatestTime.create_table()
     OrderInfo.create_table()

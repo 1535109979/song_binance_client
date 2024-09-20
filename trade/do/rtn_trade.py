@@ -51,6 +51,10 @@ class RtnTrade:
         return type_util.convert_to_float(self.data["price"])
 
     @property
+    def order_id(self):
+        return self.data.get("order_id", 0)
+
+    @property
     def parent_order_id(self):
         return self.data.get("parent_order_id", 0)
 
