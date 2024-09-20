@@ -92,7 +92,7 @@ if __name__ == '__main__':
     # AccountValue.create_table()
     # Subtest.create_table()
     # TableLatestTime.create_table()
-    # OrderInfo.create_table()
+    OrderInfo.create_table()
     TradeInfo.create_table()
 
     # save_data = Subtest(
