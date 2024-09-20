@@ -115,7 +115,7 @@ class BreakoutStrategy:
                 self.strategy_process.logger.info('<cal_singal> skip holding position')
                 return
             else:
-                if opposite_direction_position.volume and self.trend_flag == opposite_direction_position:
+                if opposite_direction_position.volume and self.trend_flag == opposite_direction_position.direction:
                     self.logger.info(f'skip by ma')
                     return
                 elif opposite_direction_position.volume:
