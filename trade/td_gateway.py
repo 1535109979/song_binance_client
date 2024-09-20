@@ -4,7 +4,7 @@ from copy import copy
 from datetime import datetime
 from decimal import Decimal
 
-from song_binance_client.database.bian_f_dbm import RtnTrade, AccountValue
+from song_binance_client.database.bian_f_dbm import TradeInfo, AccountValue, OrderInfo
 from song_binance_client.trade.future_api import BiFutureTd
 from song_binance_client.utils.aio_timer import AioTimer
 from song_binance_client.utils.configs import Configs
@@ -70,12 +70,27 @@ class BiFutureTdGateway:
 
         return client_order_id
 
+    @common_exception(log_flag=True)
     def on_order(self, rtn_order):
-        pass
+        save_rtn_trade = OrderInfo(
+            instrument=rtn_order.instrument,
+            client_id=rtn_order.client_id,
+            offset=rtn_order.offset_flag,
+            side=rtn_order.direction,
+            volume=rtn_order.volume,
+            price=rtn_order.limit_price,
+            trading_day=rtn_order.trading_day,
+            status=rtn_order.status,
+            trade_time=rtn_order.update_time,
+            commission=rtn_order.commission,
+            commission_asset=rtn_order.commission_asset,
+            update_time=datetime.now(),
+        )
+        save_rtn_trade.save()
 
     @common_exception(log_flag=True)
     def on_trade(self, rtn_trade):
-        save_rtn_trade = RtnTrade(
+        save_rtn_trade = TradeInfo(
             instrument=rtn_trade.instrument,
             client_id=rtn_trade.client_id,
             offset=rtn_trade.offset_flag,
@@ -84,7 +99,9 @@ class BiFutureTdGateway:
             price=rtn_trade.price,
             trading_day=rtn_trade.trading_day,
             trade_time=rtn_trade.trade_time,
+            profit=rtn_trade.profit,
             commission=rtn_trade.commission,
+            commission_asset=rtn_trade.commission_asset,
             update_time=datetime.now(),
         )
         save_rtn_trade.save()

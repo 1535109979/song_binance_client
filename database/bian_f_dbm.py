@@ -17,7 +17,7 @@ class SqliteDatabaseManage:
         return db
 
 
-class RtnTrade(Model):
+class TradeInfo(Model):
     id = AutoField(primary_key=True)
     instrument = CharField()
     client_id = CharField()
@@ -27,12 +27,34 @@ class RtnTrade(Model):
     price = FloatField()
     trading_day = CharField()
     trade_time = CharField()
+    profit = FloatField()
     commission = FloatField()
+    commission_asset = CharField()
     update_time = DateTimeField()
 
     class Meta:
         database = SqliteDatabaseManage().get_connect()
-        table_name = 'rtn_trade'
+        table_name = 'trade_info'
+
+
+class OrderInfo(Model):
+    id = AutoField(primary_key=True)
+    instrument = CharField()
+    client_id = CharField()
+    offset = CharField()
+    side = CharField()
+    volume = FloatField()
+    price = FloatField()
+    trading_day = CharField()
+    status = CharField()
+    trade_time = CharField()
+    commission = FloatField()
+    commission_asset = CharField()
+    update_time = DateTimeField()
+
+    class Meta:
+        database = SqliteDatabaseManage().get_connect()
+        table_name = 'order_info'
 
 
 class AccountValue(Model):
@@ -70,12 +92,14 @@ if __name__ == '__main__':
     # AccountValue.create_table()
     # Subtest.create_table()
     # TableLatestTime.create_table()
+    # OrderInfo.create_table()
+    TradeInfo.create_table()
 
-    save_data = Subtest(
-        balance=1,
-        update_time=datetime.now(),
-    )
-    save_data.save()
+    # save_data = Subtest(
+    #     balance=1,
+    #     update_time=datetime.now(),
+    # )
+    # save_data.save()
 
     # save_rtn_trade = RtnTrade(
     #             instrument='instrument',

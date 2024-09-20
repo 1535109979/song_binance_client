@@ -8,8 +8,7 @@ from song_binance_client.utils.lock import instance_synchronized
 
 class Dingding:
 
-    url = ('https://oapi.dingtalk.com/robot/send?access_token='
-           '2b336337436ea0b4edb5c4117d584b01b613c9eaf102c284e27ae5cfb92d4b8b')
+    url = ('https://oapi.dingtalk.com/robot/send?access_token=71652eb274cd6a8cca66983528c87d0ae85467b3af5920f6c2f357f6127dab55')
 
     @classmethod
     @instance_synchronized

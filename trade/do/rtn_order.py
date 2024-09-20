@@ -228,6 +228,18 @@ class RtnOrder:
         return type_util.convert_to_float(self.data["insert_time"])
 
     @property
+    def update_time(self):
+        return type_util.convert_to_float(self.data["update_time"])
+
+    @property
+    def commission(self):
+        return type_util.convert_to_float(self.data["commission"])
+
+    @property
+    def commission_asset(self):
+        return self.data["commission_asset"]
+
+    @property
     def avg_price(self) -> float:
         """ 实际成交均价 """
         return type_util.convert_to_float(self.data.get("avg_price", 0))

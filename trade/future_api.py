@@ -331,7 +331,7 @@ class BiFutureTd:
                         P.get("iw"), precision=8, default=0)
 
                     position.update_margin_type(P.get("mt"))
-                    self.logger.info("<position> %s P=%s", position, P)
+                    self.logger.info("<_on_user_data_ACCOUNT_UPDATE> position=%s P=%s", position, P)
 
     @common_exception(log_flag=True)
     def _on_user_data_ORDER_TRADE_UPDATE(self, data: dict):
@@ -342,12 +342,13 @@ class BiFutureTd:
             if rtn_order:
                 # 系统内的交易, 更新委托回报对象
                 rtn_order.update_by_rtn_data(data=o)
+                self.logger.info("<_on_user_data_ORDER_TRADE_UPDATE> _on_user_data_ORDER_TRADE_UPDATE%s", rtn_order)
             else:
                 # 系统外的交易, 创建委托回报对象
                 rtn_order = RtnOrder.create_by_outside_rtn_data(
                     self._updates_rtn_data(data=o, instrument=o["s"]))
                 self.rtn_order_map[order_id] = rtn_order
-                self.logger.info("<outside_rtn_order> %s", rtn_order)
+                self.logger.info("<outside_rtn_order> _on_user_data_ORDER_TRADE_UPDATE%s", rtn_order)
 
             if o.get("t"):
                 # 创建成交回报对象
@@ -355,8 +356,8 @@ class BiFutureTd:
 
                 # 计算持仓信息
                 position = self.account_book.update_by_trade_rtn(rtn_trade)
-                self.logger.info("<position> %s", position)
-                # self.gateway.on_trade(rtn_trade)
+                self.logger.info("<_on_user_data_ORDER_TRADE_UPDATE> position=%s", position)
+                self.gateway.on_trade(rtn_trade)
 
             self.gateway.on_order(rtn_order)
 

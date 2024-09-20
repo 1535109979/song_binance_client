@@ -60,7 +60,7 @@ class RtnTrade:
 
     @property
     def profit(self):
-        return self.data.get("profit", 0)
+        return type_util.convert_to_float(self.data.get("profit", 0))
 
     @property
     def source_type(self):
@@ -77,6 +77,10 @@ class RtnTrade:
     @property
     def trade_time(self):
         return type_util.convert_to_int(self.data["trade_time"])
+
+    @property
+    def commission_asset(self):
+        return self.data['commission_asset']
 
     @property
     def instrument_category(self):

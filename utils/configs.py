@@ -42,7 +42,7 @@ class Configs:
 
         {'instrument': 'LTCUSDT',
          'strategy_name': 'breakout',
-         'cash': 20,
+         'cash': 30,
          'open_direction': 'LONG',
          'windows': 400,
          'open_volume': 30,
@@ -53,7 +53,7 @@ class Configs:
 
         {'instrument': 'RLCUSDT',
          'strategy_name': 'breakout',
-         'cash': 20,
+         'cash': 30,
          'open_direction': 'LONG',
          'windows': 400,
          'open_volume': 30,
