@@ -72,7 +72,6 @@ class BiFutureTdGateway:
 
     @common_exception(log_flag=True)
     def on_order(self, rtn_order):
-        print(rtn_order)
         save_rtn_trade = OrderInfo(
             instrument=rtn_order.instrument,
             order_id=rtn_order.order_id,
