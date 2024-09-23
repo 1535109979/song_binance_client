@@ -108,6 +108,7 @@ class BiFutureTdGateway:
         )
         save_rtn_trade.save()
 
+    @common_exception(log_flag=True)
     def on_query_account(self, data):
         total_balance = data['totalCrossWalletBalance']
         save_balance_data = AccountValue(
@@ -132,7 +133,7 @@ class BiFutureTdGateway:
 
     def send_start_msg(self, login_reqid):
         self.logger.info(f"<send_start_msg> {login_reqid}")
-        self.send_msg(f"<send_start_msg> {login_reqid}")
+        self.send_msg(f"<send_start_msg> td {login_reqid}")
 
     @common_exception(log_flag=True)
     def on_account_update(self):

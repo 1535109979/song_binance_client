@@ -18,4 +18,5 @@ with sqlite3.connect('bian_f_data.db') as conn:
     print(df)
     df = pd.read_sql('select * from trade_info', conn)
     print(df)
+    print(df['profit'].sum())
 

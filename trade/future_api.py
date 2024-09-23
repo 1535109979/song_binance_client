@@ -60,7 +60,7 @@ class BiFutureTd:
         self._listen_key: Optional[str] = None
         self._listen_last_ping_ts: Optional[float] = 0
 
-        self._add_restart_listen_timer()
+        # self._add_restart_listen_timer()
         # query account   check ping
         self._add_query_account_timer(interval=120)
 

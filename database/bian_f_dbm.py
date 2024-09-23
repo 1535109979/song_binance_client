@@ -94,9 +94,9 @@ if __name__ == '__main__':
     # Subtest.create_table()
     # TableLatestTime.create_table()
 
-    # AccountValue.create_table()
-    # OrderInfo.create_table()
-    # TradeInfo.create_table()
+    AccountValue.create_table()
+    OrderInfo.create_table()
+    TradeInfo.create_table()
 
     # account_values = AccountValue.select()
     # for account in account_values:
@@ -110,9 +110,9 @@ if __name__ == '__main__':
 
     # AccountValue.delete().where(AccountValue.id == 1).execute()
 
-    account = AccountValue.get(AccountValue.id == 7)
-    account.balance = 12344
-    account.save()
+    # account = AccountValue.get(AccountValue.id == 7)
+    # account.balance = 12344
+    # account.save()
 
     # save_rtn_trade = RtnTrade(
     #             instrument='instrument',

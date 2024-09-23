@@ -44,10 +44,10 @@ class Configs:
          'strategy_name': 'breakout',
          'cash': 30,
          'open_direction': 'LONG',
-         'windows': 400,
+         'windows': 550,
          'open_volume': 30,
-         'roll_mean_period': 200,
-         'interval_period': 120,
+         'roll_mean_period': 630,
+         'interval_period': 60,
          'stop_loss': 0
          },
 
