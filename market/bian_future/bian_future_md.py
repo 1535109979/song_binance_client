@@ -80,9 +80,7 @@ class BiFutureMd:
     def _resubscribe(self):
         self.logger.info(f"<_resubscribe> {self.sub_instrument}")
         if self.sub_instrument:
-            for i in self.sub_instrument:
-                self.subscribe(i)
-                time.sleep(0.5)
+            self.subscribe(self.sub_instrument)
 
     def _on_open(self, _):
         self.logger.info("<on_open> %s %s", self.reqUserLoginId, _)
