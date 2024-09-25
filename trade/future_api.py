@@ -126,6 +126,7 @@ class BiFutureTd:
 
                 if result and result.__contains__("listenKey"):
                     new_listen_key = result["listenKey"]
+
         except ClientError as e:
             self.logger.exception("!!! renew_listen_key failed %s !!! %s %s",
                                   e, self.reqUserLoginId, self._listen_key)
@@ -136,6 +137,7 @@ class BiFutureTd:
         if not self._listen_key or (new_listen_key and self._listen_key != new_listen_key):
             self._listen_key = new_listen_key
             self._start_listen()
+        self._add_restart_listen_timer(60 * 55 - 0.5)
 
     def _unsubscribe_user_data(self):
         # 更改状态
@@ -505,10 +507,9 @@ class BiFutureTd:
         result: List[dict] = self.client.cancel_open_orders(instrument)
         self.logger.info(f"<cancel_open_orders> result={result}")
 
-    def _add_restart_listen_timer(self, interval: float = 60 * 60 - 0.5):
+    def _add_restart_listen_timer(self, interval: float = 60 * 55 - 0.5):
         def _check():
             self._restart_listen()
-            self._add_restart_listen_timer(interval)
 
         AioTimer.new_timer(_delay=interval, _func=_check)
 
