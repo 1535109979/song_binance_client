@@ -1,3 +1,4 @@
+import logging
 import platform
 
 system = platform.system()
@@ -65,3 +66,12 @@ class Configs:
     ]
 
 
+from logging.handlers import TimedRotatingFileHandler
+logger = logging.getLogger('binance_api')
+logger.setLevel(logging.DEBUG)
+log_fp = Configs.root_fp + 'song_binance_client/logs/binance_api.log'
+handler = TimedRotatingFileHandler(log_fp, when="midnight", interval=1, backupCount=7)
+handler.suffix = "%Y-%m-%d.log"  # 设置滚动后文件的后缀
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
