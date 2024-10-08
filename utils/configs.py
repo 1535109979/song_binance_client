@@ -43,23 +43,25 @@ class Configs:
 
         {'instrument': 'LTCUSDT',
          'strategy_name': 'breakout',
-         'cash': 200,
+         'cash': 50,
          'open_direction': 'LONG',
          'windows': 550,
          'open_volume': 30,
          'roll_mean_period': 630,
          'interval_period': 60,
+         'order_step_muti': 10,
          'stop_loss': 0
          },
 
         {'instrument': 'RLCUSDT',
          'strategy_name': 'breakout',
-         'cash': 200,
+         'cash': 50,
          'open_direction': 'LONG',
          'windows': 400,
          'open_volume': 30,
          'roll_mean_period': 120,
          'interval_period': 860,
+         'order_step_muti': 20,
          'stop_loss': 0
          },
 

@@ -36,22 +36,27 @@ class BiFutureTdGateway:
         min_volume_muti = int(1 / float(instrument_book.min_volume_step))
         min_price_step = instrument_book.min_price_step
 
+        order_step_muti = 10
+        for param in Configs.strategy_list:
+            if instrument == param.get('instrument'):
+                order_step_muti = param['order_step_muti']
+
         if offset_flag == OffsetFlag.OPEN:
             if direction == Direction.LONG:
-                trade_price = Decimal(price) + Decimal(min_price_step) * 10
+                trade_price = Decimal(price) + Decimal(min_price_step) * order_step_muti
             elif direction == Direction.SHORT:
-                trade_price = Decimal(price) - Decimal(min_price_step) * 10
+                trade_price = Decimal(price) - Decimal(min_price_step) * order_step_muti
         elif offset_flag == OffsetFlag.CLOSE:
             if direction == Direction.LONG:
-                trade_price = Decimal(price) - Decimal(min_price_step) * 10
+                trade_price = Decimal(price) - Decimal(min_price_step) * order_step_muti
             elif direction == Direction.SHORT:
-                trade_price = Decimal(price) + Decimal(min_price_step) * 10
+                trade_price = Decimal(price) + Decimal(min_price_step) * order_step_muti
 
         if 'cash' in kwargs:
             volume = kwargs['cash'] / float(price)
             volume = round(volume * min_volume_muti) / min_volume_muti
             self.logger.info(f'cal vol: min_volume_muti={min_volume_muti} cash={kwargs["cash"]} '
-                             f'price={trade_price} volume={volume}')
+                             f'price={trade_price} volume={volume} order_step_muti={order_step_muti}')
 
         req = {
             'instrument': instrument,
