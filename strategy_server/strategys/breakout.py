@@ -3,6 +3,7 @@ import time
 import numpy
 
 from song_binance_client.trade.do.position import InstrumentPosition
+from song_binance_client.utils.configs import Configs
 from song_binance_client.utils.exchange_enum import Direction, OffsetFlag, OrderPriceType
 from decimal import Decimal
 
@@ -86,9 +87,9 @@ class BreakoutStrategy:
                 self.signal_flag = [self.regressio_flag,time.time(),0]
 
         if self.signal_flag:
-            if self.signal_flag[0] == Direction.LONG and time.time() - self.signal_flag[1] < 600 and self.min_dr > 0.003:
+            if self.signal_flag[0] == Direction.LONG and time.time() - self.signal_flag[1] < Configs.signal_reserve_time and self.min_dr > Configs.dr:
                 self.signal_flag = [self.regressio_flag, time.time(), 1]
-            if self.signal_flag[0] == Direction.SHORT and time.time() - self.signal_flag[1] < 600 and self.max_dr < -0.003:
+            if self.signal_flag[0] == Direction.SHORT and time.time() - self.signal_flag[1] < Configs.signal_reserve_time and self.max_dr < -Configs.dr:
                 self.signal_flag = [self.regressio_flag, time.time(), 1]
 
         self.logger.info(f'<cal_indicator> l={last_price} min={self.last_n_min} max={self.last_n_max} '
@@ -110,7 +111,7 @@ class BreakoutStrategy:
         if not self.signal_flag:
             pass
         else:
-            if not self.signal_flag[2] or time.time() - self.signal_flag[1] > 600:
+            if not self.signal_flag[2] or time.time() - self.signal_flag[1] > Configs.signal_reserve_time:
                 return
 
             signal_direction = self.signal_flag[0]

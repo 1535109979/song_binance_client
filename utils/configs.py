@@ -5,6 +5,9 @@ system = platform.system()
 
 
 class Configs:
+    dr = 0.003
+    signal_reserve_time = 600
+
     if system == 'Darwin':
         root_fp = '/Users/edy/byt_pub/'
 
