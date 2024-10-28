@@ -1,3 +1,5 @@
+import time
+
 import numpy
 
 from song_binance_client.trade.do.position import InstrumentPosition
@@ -27,6 +29,8 @@ class BreakoutStrategy:
 
         self.regressio_flag = None
         self.trend_flag = None
+
+        self.signal_flag = None
 
         self.load_last_price()
 
@@ -59,6 +63,8 @@ class BreakoutStrategy:
         self.am = self.am[-self.min_save_window:]
         self.last_n_max = max(self.am[-self.windows:])
         self.last_n_min = min(self.am[-self.windows:])
+        self.min_dr = last_price / self.last_n_min - 1
+        self.max_dr = last_price / self.last_n_max - 1
 
         self.am.append(last_price)
         roll_mean = round(sum([float(x) for x in self.am[-self.roll_mean_period:]]) / self.roll_mean_period, 4)
@@ -75,39 +81,46 @@ class BreakoutStrategy:
         elif last_price < self.roll_mean_list[-self.interval_period] < self.roll_mean_list[-self.interval_period * 2]:
             self.trend_flag = Direction.SHORT
 
+        if self.regressio_flag:
+            if self.regressio_flag.open_direction != self.trend_flag:
+                self.signal_flag = [self.regressio_flag,time.time(),0]
+
+        if self.signal_flag:
+            if self.signal_flag[0] == Direction.LONG and time.time() - self.signal_flag[1] < 600 and self.min_dr > 0.003:
+                self.signal_flag = [self.regressio_flag, time.time(), 1]
+            if self.signal_flag[0] == Direction.SHORT and time.time() - self.signal_flag[1] < 600 and self.max_dr < -0.003:
+                self.signal_flag = [self.regressio_flag, time.time(), 1]
+
         self.logger.info(f'<cal_indicator> l={last_price} min={self.last_n_min} max={self.last_n_max} '
                          f'{self.roll_mean_list[-self.interval_period]} '
                          f'{self.roll_mean_list[-self.interval_period * 2]} '
-                         f'regressio_flag={self.regressio_flag} trend_flag={self.trend_flag}')
+                         f'regressio_flag={self.regressio_flag} trend_flag={self.trend_flag} '
+                         f'signal_flag={self.signal_flag}')
 
     @common_exception(log_flag=True)
     def cal_singal(self, quote):
         instrument = quote['symbol']
         last_price = quote['last_price']
-        # print('cal_singal', self.logger.name, self.params, self.min_save_window)
-        # open_direction = self.open_direction
-        # trade_price = Decimal(last_price) - Decimal('0.005')
-        # self.strategy_process.td_gateway.insert_order(instrument, OffsetFlag.OPEN, open_direction,
-        #                                               OrderPriceType.LIMIT, str(trade_price), self.open_volume,
-        #                                               cash=self.params['cash'])
-        # # print('---- send ----')
-        # return
 
         if not quote.get('is_closed', 0):
             return
 
-        self.strategy_process.logger.info(f'<cal_singal> regressio_flag={self.regressio_flag} '
-                                          f'trend_flag={self.trend_flag}')
+        self.strategy_process.logger.info(f'<cal_singal> signal_flag={self.signal_flag}')
 
-        if not self.regressio_flag:
+        if not self.signal_flag:
             pass
         else:
+            if not self.signal_flag[2] or time.time() - self.signal_flag[1] > 600:
+                return
+
+            signal_direction = self.signal_flag[0]
+
             direction_position: InstrumentPosition = self.strategy_process.td_gateway.account_book.get_instrument_position(
-                f'{instrument}.{self.strategy_process.td_gateway.exchange_type}', self.regressio_flag)
+                f'{instrument}.{self.strategy_process.td_gateway.exchange_type}', signal_direction)
             self.logger.info(f'direction_position={direction_position}')
 
             opposite_direction_position: InstrumentPosition = self.strategy_process.td_gateway.account_book.get_instrument_position(
-                f'{instrument}.{self.strategy_process.td_gateway.exchange_type}', self.regressio_flag.get_opposite_direction())
+                f'{instrument}.{self.strategy_process.td_gateway.exchange_type}', signal_direction.get_opposite_direction())
             self.logger.info(f'opposite_direction_position={opposite_direction_position}')
 
             if direction_position.volume:
@@ -115,13 +128,11 @@ class BreakoutStrategy:
                 self.strategy_process.logger.info('<cal_singal> skip holding position')
                 return
             else:
-                if opposite_direction_position.volume and self.trend_flag == opposite_direction_position.direction:
-                    self.logger.info(f'skip by ma')
-                    return
-                elif opposite_direction_position.volume:
+                # 有信号反方向持仓
+                if opposite_direction_position.volume:
 
                     self.strategy_process.td_gateway.insert_order(instrument, OffsetFlag.CLOSE,
-                                                                  self.regressio_flag.get_opposite_direction(),
+                                                                  signal_direction.get_opposite_direction(),
                                                                   OrderPriceType.LIMIT, str(last_price),
                                                                   opposite_direction_position.volume)
                     self.strategy_process.logger.info(f'<cal_singal> insert_order  instrument={instrument} '
@@ -130,7 +141,7 @@ class BreakoutStrategy:
                                                       f'OrderPriceType={OrderPriceType.LIMIT} price={str(last_price)} '
                                                       f'volume={opposite_direction_position.volume} ')
 
-                self.strategy_process.td_gateway.insert_order(instrument, OffsetFlag.OPEN, self.regressio_flag,
+                self.strategy_process.td_gateway.insert_order(instrument, OffsetFlag.OPEN, signal_direction,
                                                               OrderPriceType.LIMIT, str(last_price), self.open_volume,
                                                               cash=self.params['cash'])
                 self.strategy_process.logger.info(f'<cal_singal> insert_order  instrument={instrument} '
@@ -138,3 +149,4 @@ class BreakoutStrategy:
                                                   f'OrderPriceType={OrderPriceType} price={str(last_price)} '
                                                   f'volume={self.open_volume} cash={self.params["cash"]}')
 
+                self.signal_flag = None

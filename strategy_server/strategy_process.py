@@ -24,6 +24,8 @@ class StrategyProcess:
 
         self.load_strategy()
 
+
+
     def load_strategy(self):
         # if self.strategy_config.get('stop_loss'):
         #     self.strategy_list.append(StopLoss(self, self.strategy_config['stop_loss']))
