@@ -88,9 +88,9 @@ class BreakoutStrategy:
 
         if self.signal_flag:
             if self.signal_flag[0] == Direction.LONG and time.time() - self.signal_flag[1] < Configs.signal_reserve_time and self.min_dr > Configs.dr:
-                self.signal_flag = [self.regressio_flag, time.time(), 1]
+                self.signal_flag[2] = 1
             if self.signal_flag[0] == Direction.SHORT and time.time() - self.signal_flag[1] < Configs.signal_reserve_time and self.max_dr < -Configs.dr:
-                self.signal_flag = [self.regressio_flag, time.time(), 1]
+                self.signal_flag[2] = 1
 
         self.logger.info(f'<cal_indicator> l={last_price} min={self.last_n_min} max={self.last_n_max} '
                          f'{self.roll_mean_list[-self.interval_period]} '
