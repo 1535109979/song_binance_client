@@ -83,7 +83,7 @@ class BreakoutStrategy:
             self.trend_flag = Direction.SHORT
 
         if self.regressio_flag:
-            if self.regressio_flag.open_direction != self.trend_flag:
+            if self.regressio_flag != self.trend_flag:
                 self.signal_flag = [self.regressio_flag,time.time(),0]
 
         if self.signal_flag:
