@@ -95,7 +95,7 @@ class BreakoutStrategy:
                 self.signal_flag[2] = 1
 
         self.logger.info(f'<cal_indicator> l={last_price} min={self.last_n_min} max={self.last_n_max} '
-                         f'min_dr={self.min_dr} max_dr={self.max_dr}'
+                         f'min_dr={self.min_dr} max_dr={self.max_dr} '
                          f'{self.roll_mean_list[-self.interval_period]} '
                          f'{self.roll_mean_list[-self.interval_period * 2]} '
                          f'regressio_flag={self.regressio_flag} trend_flag={self.trend_flag} '
@@ -141,7 +141,7 @@ class BreakoutStrategy:
                                                                   opposite_direction_position.volume)
                     self.strategy_process.logger.info(f'<cal_singal> insert_order  instrument={instrument} '
                                                       f'OffsetFlag=close '
-                                                      f'direction={self.regressio_flag.get_opposite_direction()} '
+                                                      f'direction={signal_direction.get_opposite_direction()} '
                                                       f'OrderPriceType={OrderPriceType.LIMIT} price={str(last_price)} '
                                                       f'volume={opposite_direction_position.volume} ')
 
@@ -149,7 +149,7 @@ class BreakoutStrategy:
                                                               OrderPriceType.LIMIT, str(last_price), self.open_volume,
                                                               cash=self.params['cash'])
                 self.strategy_process.logger.info(f'<cal_singal> insert_order  instrument={instrument} '
-                                                  f'OffsetFlag=open direction={self.regressio_flag} '
+                                                  f'OffsetFlag=open direction={signal_direction} '
                                                   f'OrderPriceType={OrderPriceType} price={str(last_price)} '
                                                   f'volume={self.open_volume} cash={self.params["cash"]}')
 
