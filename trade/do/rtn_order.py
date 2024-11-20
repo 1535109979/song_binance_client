@@ -6,7 +6,7 @@ from typing import Tuple, Dict
 from song_binance_client.utils import type_util
 from song_binance_client.utils.exchange_enum import SourceType, ExchangeType, InstrumentCategory, OrderStatus, \
     OffsetFlag, Direction
-from song_binance_client.utils.id_gen import UlIdGenerator
+
 
 # 多空和开平方向映射
 DIRECTION_2VT = {

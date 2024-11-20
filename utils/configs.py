@@ -5,8 +5,8 @@ system = platform.system()
 
 
 class Configs:
-    dr = 0.003
-    signal_reserve_time = 600
+    dr = 0.001
+    signal_reserve_time = 1200
 
     if system == 'Darwin':
         root_fp = '/Users/edy/byt_pub/'
@@ -37,27 +37,29 @@ class Configs:
         # {'instrument': 'LTCUSDT', 'cash': 200,
         #  'windows': 550, 'roll_mean_period': 630, 'interval_period': 60,
         #  'strategy_name': 'breakout', 'open_direction': 'LONG',
-        #  'open_volume': 30, 'order_step_muti': 10, 'stop_loss': 0},
+        #  'open_volume': 30, 'order_step_muti': 10, 'stop_loss_rate': 0},
 
         # {'instrument': 'EOSUSDT', 'cash': 200,
         #  'windows': 390, 'roll_mean_period': 100, 'interval_period': 100,
         #  'strategy_name': 'breakout', 'open_direction': 'LONG',
-        #  'open_volume': 30, 'order_step_muti': 20, 'stop_loss': 0},
+        #  'open_volume': 30, 'order_step_muti': 20, 'stop_loss_rate': 0},
 
-        { 'instrument': 'RLCUSDT', 'cash': 200,
+        {'instrument': 'RLCUSDT', 'cash': 200,
          'windows': 400, 'roll_mean_period': 120, 'interval_period': 860,
-         'strategy_name': 'breakout', 'open_direction': 'LONG',
-         'open_volume': 30, 'order_step_muti': 20, 'stop_loss': 0 },
+         'strategy_name': ['breakout'], 'open_direction': 'LONG',
+         'open_volume': 30, 'order_step_muti': 20, 'stop_loss_rate': 0,
+        },
 
         {'instrument': 'ONDOUSDT', 'cash': 200,
          'windows': 430, 'roll_mean_period': 200, 'interval_period': 710,
-         'strategy_name': 'breakout', 'open_direction': 'LONG',
-         'open_volume': 30, 'order_step_muti': 10, 'stop_loss': 0},
+         'strategy_name': ['breakout'], 'open_direction': 'LONG',
+         'open_volume': 30, 'order_step_muti': 10, 'stop_loss_rate': 0,
+         },
 
         # {'instrument': 'PORTALUSDT', 'cash': 200,
         #  'windows': 600, 'roll_mean_period': 500, 'interval_period': 600,
         #  'strategy_name': 'breakout', 'open_direction': 'LONG',
-        #  'open_volume': 30, 'order_step_muti': 10, 'stop_loss': 0},
+        #  'open_volume': 30, 'order_step_muti': 10, 'stop_loss_rate': 0},
 
     ]
 

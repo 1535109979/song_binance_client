@@ -115,6 +115,7 @@ class BreakoutStrategy:
             pass
         else:
             if not self.signal_flag[2] or time.time() - self.signal_flag[1] > Configs.signal_reserve_time:
+                self.strategy_process.logger.info(f'<cal_singal> ignore singal {time.time() - self.signal_flag[1]}')
                 return
 
             signal_direction = self.signal_flag[0]

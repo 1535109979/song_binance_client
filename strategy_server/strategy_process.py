@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 
 import pandas
 
+from song_binance_client.strategy_server.strategys.bid import BidStrategy
 from song_binance_client.strategy_server.strategys.breakout import BreakoutStrategy
 from song_binance_client.strategy_server.strategys.stop_cover import StopLoss
 from song_binance_client.utils.configs import Configs
@@ -27,11 +28,13 @@ class StrategyProcess:
 
 
     def load_strategy(self):
-        # if self.strategy_config.get('stop_loss'):
-        #     self.strategy_list.append(StopLoss(self, self.strategy_config['stop_loss']))
-        if self.params['strategy_name'] == 'breakout':
+        if 'breakout' in self.params['strategy_name']:
             self.get_klines()
             b = BreakoutStrategy(self, self.params)
+            self.strategy_list.append(b)
+
+        if 'bid' in self.params['strategy_name']:
+            b = BidStrategy(self, self.params)
             self.strategy_list.append(b)
 
     def on_quote(self, quote):
