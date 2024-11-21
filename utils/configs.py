@@ -54,6 +54,7 @@ class Configs:
          'windows': 430, 'roll_mean_period': 200, 'interval_period': 710,
          'strategy_name': ['breakout'], 'open_direction': 'LONG',
          'open_volume': 30, 'order_step_muti': 10, 'stop_loss_rate': 0,
+
          },
 
         # {'instrument': 'PORTALUSDT', 'cash': 200,
