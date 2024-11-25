@@ -55,6 +55,7 @@ class BidStrategy:
                                                   f'open LONG {OrderPriceType} price={str(last_price)} '
                                                   f'volume={self.open_volume} '
                                                   f'cash={self.cover_muti_list[self.cover_count] * self.cash}')
+                self.cover_count += 1
 
         if short_position.volume:
             decline_rate = (1 - last_price / self.last_couer_price) * 100
@@ -75,6 +76,7 @@ class BidStrategy:
                                                   f'volume={self.open_volume} '
                                                   f'cash={self.cover_muti_list[self.cover_count] * self.cash}')
 
+                self.cover_count += 1
 
     @common_exception(log_flag=True)
     def cal_singal(self, quote):
