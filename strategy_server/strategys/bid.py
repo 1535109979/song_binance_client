@@ -39,6 +39,7 @@ class BidStrategy:
         short_position: InstrumentPosition = self.strategy_process.td_gateway.account_book.get_instrument_position(
             f'{instrument}.{self.strategy_process.td_gateway.exchange_type}', Direction.SHORT)
 
+        # 补仓次数达到上限
         if self.cover_count == len(self.cover_muti_list) - 1:
             self.logger.info(f'cover_count limit:cover_count times={self.cover_count}')
 
@@ -56,7 +57,7 @@ class BidStrategy:
                 f'peak={self.peak} tough={self.tough} l={last_price}')
 
 
-            if profit_rate > self.stop_profit_rate and peak_decline_rate > 0.2:
+            if profit_rate > self.stop_profit_rate and peak_decline_rate > 0.2 and self.cover_count:
                 self.strategy_process.td_gateway.insert_order(instrument, OffsetFlag.CLOSE,
                                                               Direction.LONG,
                                                               OrderPriceType.LIMIT, str(last_price),
@@ -87,7 +88,7 @@ class BidStrategy:
                 f'tough_rise_rate={tough_rise_rate}  peak_decline_rate={peak_decline_rate} '
                 f'peak={self.peak} tough={self.tough} l={last_price}')
 
-            if profit_rate > self.stop_profit_rate and tough_rise_rate > 0.2:
+            if profit_rate > self.stop_profit_rate and tough_rise_rate > 0.2 and self.cover_count:
                 self.strategy_process.td_gateway.insert_order(instrument, OffsetFlag.CLOSE,
                                                               Direction.SHORT,
                                                               OrderPriceType.LIMIT, str(last_price),
