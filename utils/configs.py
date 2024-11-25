@@ -59,7 +59,7 @@ class Configs:
          'windows': 430, 'roll_mean_period': 200, 'interval_period': 710,
          'strategy_name': ['bid','breakout'], 'open_direction': 'LONG',
          'open_volume': 30, 'order_step_muti': 10, 'stop_loss_rate': 0,
-         'cover_count': 0,'last_couer_price':1.024,
+         'cover_count': 1,'last_couer_price':1.07,
          'cover_muti_list':[1,2,4,8,16],
          'cover_decline_list':[3, 3, 3, 3, 3],
          'peak': 1.1173, 'tough': 1.0239,
