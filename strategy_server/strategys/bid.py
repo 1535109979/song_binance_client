@@ -59,3 +59,6 @@ class BidStrategy:
             pass
 
 
+    @common_exception(log_flag=True)
+    def cal_singal(self, quote):
+        pass
