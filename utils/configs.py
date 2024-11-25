@@ -5,7 +5,7 @@ system = platform.system()
 
 
 class Configs:
-    dr = 0.001
+    dr = 0.002
     signal_reserve_time = 1200
 
     if system == 'Darwin':
@@ -48,23 +48,23 @@ class Configs:
          'windows': 400, 'roll_mean_period': 120, 'interval_period': 860,
          'strategy_name': ['bid','breakout'], 'open_direction': 'LONG',
          'open_volume': 30, 'order_step_muti': 20, 'stop_loss_rate': 0,
-         'cover_count': 0,'last_couer_price':2.01,
+         'cover_count': 1,'last_couer_price':2.10,
          'cover_muti_list': [1, 2, 4, 8, 16],
          'cover_decline_list': [3, 3, 3, 3, 3],
          'peak':2.1439, 'tough':1.9825,
          'stop_profit_rate': 1.3,
         },
 
-        # {'instrument': 'ONDOUSDT', 'cash': 200,
-         # 'windows': 430, 'roll_mean_period': 200, 'interval_period': 710,
-         # 'strategy_name': ['bid','breakout'], 'open_direction': 'LONG',
-         # 'open_volume': 30, 'order_step_muti': 10, 'stop_loss_rate': 0,
-         # 'cover_count': 0,'last_couer_price':1.024,
-         # 'cover_muti_list':[1,2,4,8,16],
-         # 'cover_decline_list':[3, 3, 3, 3, 3],
-         # 'peak': 1.1173, 'tough': 1.0239,
-         # 'stop_profit_rate':1.3,
-         # },
+        {'instrument': 'ONDOUSDT', 'cash': 200,
+         'windows': 430, 'roll_mean_period': 200, 'interval_period': 710,
+         'strategy_name': ['bid','breakout'], 'open_direction': 'LONG',
+         'open_volume': 30, 'order_step_muti': 10, 'stop_loss_rate': 0,
+         'cover_count': 0,'last_couer_price':1.024,
+         'cover_muti_list':[1,2,4,8,16],
+         'cover_decline_list':[3, 3, 3, 3, 3],
+         'peak': 1.1173, 'tough': 1.0239,
+         'stop_profit_rate':1.3,
+         },
 
         # {'instrument': 'PORTALUSDT', 'cash': 200,
         #  'windows': 600, 'roll_mean_period': 500, 'interval_period': 600,
