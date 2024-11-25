@@ -47,6 +47,9 @@ class BidStrategy:
         peak_decline_rate = (1 - last_price / self.peak) * 100
 
         if long_position.volume:
+            if long_position.volume * last_price < self.cash * 1.5:
+                self.cover_count = 0
+
             decline_rate = (last_price / self.last_couer_price - 1) * 100
             profit_rate = (last_price / long_position.cost - 1) * 100
 
@@ -80,6 +83,9 @@ class BidStrategy:
                     self.last_couer_price = last_price
 
         if short_position.volume:
+            if short_position.volume * last_price < self.cash * 1.5:
+                self.cover_count = 0
+
             decline_rate = (1 - last_price / self.last_couer_price) * 100
             profit_rate = (1 - last_price / short_position.cost) * 100
             self.logger.info(
