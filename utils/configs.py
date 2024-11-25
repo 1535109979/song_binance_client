@@ -46,15 +46,24 @@ class Configs:
 
         {'instrument': 'RLCUSDT', 'cash': 200,
          'windows': 400, 'roll_mean_period': 120, 'interval_period': 860,
-         'strategy_name': ['breakout'], 'open_direction': 'LONG',
+         'strategy_name': ['bid','breakout'], 'open_direction': 'LONG',
          'open_volume': 30, 'order_step_muti': 20, 'stop_loss_rate': 0,
+         'cover_count': 0,
+         'cover_muti': [1, 2, 4, 8, 16],
+         'cover_decline': [3, 3, 3, 3, 3],
+         'peak':99000, 'tough':95000,
+         'stop_profit_rate': 1.3,
         },
 
         {'instrument': 'ONDOUSDT', 'cash': 200,
          'windows': 430, 'roll_mean_period': 200, 'interval_period': 710,
-         'strategy_name': ['breakout'], 'open_direction': 'LONG',
+         'strategy_name': ['bid','breakout'], 'open_direction': 'LONG',
          'open_volume': 30, 'order_step_muti': 10, 'stop_loss_rate': 0,
-
+         'cover_count': 0,
+         'cover_muti_list':[1,2,4,8,16],
+         'cover_decline_list':[3, 3, 3, 3, 3],
+         'peak': 99000, 'tough': 95000,
+         'stop_profit_rate':1.3,
          },
 
         # {'instrument': 'PORTALUSDT', 'cash': 200,

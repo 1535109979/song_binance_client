@@ -4,7 +4,7 @@ from song_binance_client.market.ms_grpc.ms_grpc_server import BianMarkerGrpcServ
 
 class MsEngine:
     def __init__(self):
-        self.gateway = BiFutureMdGateway()
+        self.gateway = BiFutureMdGateway(mode=True)
 
     def start(self):
         self.gateway.loop.run_until_complete(BianMarkerGrpcServer(self.gateway).run())

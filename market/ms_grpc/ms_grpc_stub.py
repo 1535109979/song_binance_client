@@ -6,7 +6,7 @@ from song_binance_client.utils.thread import run_in_new_thread
 
 class BianMarketStub():
     def __init__(self):
-        channel = grpc.insecure_channel("0.0.0.0:6610")
+        channel = grpc.insecure_channel("0.0.0.0:6612")
         self.sub = ms_server_pb2_grpc.AsyncMarketServerStub(channel=channel)
         self.subscribed_instruments = set()
         self.sub_count = 0
@@ -41,7 +41,7 @@ def on_quote(quote):
 
 
 if __name__ == '__main__':
-    BianMarketStub().subscribe_stream_in_new_thread(instruments=['BTCUSDT'], on_quote=on_quote)
+    BianMarketStub().subscribe_stream_in_new_thread(instruments=['ONDOUSDT'], on_quote=on_quote)
 
     while 1:
         pass

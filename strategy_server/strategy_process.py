@@ -19,6 +19,7 @@ class StrategyProcess:
         self.logger = None
         self.latest_price_list = []
         self.params = params
+        self.cover_count = params['cover_count']
 
         self.strategy_list = []
         self.create_logger()

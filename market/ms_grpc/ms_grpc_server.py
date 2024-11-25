@@ -38,8 +38,9 @@ class BianMarkerGrpcServer(ms_server_pb2_grpc.AsyncMarketServerServicer):
         return ms_server_pb2.FlagReply(flag=True)
 
     async def run(self):
+        print('----')
         self.server = grpc.aio.server()
-        self.server.add_insecure_port("0.0.0.0:6610")
+        self.server.add_insecure_port("0.0.0.0:6612")
         ms_server_pb2_grpc.add_AsyncMarketServerServicer_to_server(self, self.server)
         await self.server.start()
         await self.server.wait_for_termination()
