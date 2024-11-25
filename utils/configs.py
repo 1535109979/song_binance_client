@@ -51,7 +51,7 @@ class Configs:
          'cover_count': 0,'last_couer_price':2.01,
          'cover_muti_list': [1, 2, 4, 8, 16],
          'cover_decline_list': [3, 3, 3, 3, 3],
-         'peak':99000, 'tough':95000,
+         'peak':2.1439, 'tough':1.9825,
          'stop_profit_rate': 1.3,
         },
 
@@ -62,7 +62,7 @@ class Configs:
          'cover_count': 0,'last_couer_price':1.024,
          'cover_muti_list':[1,2,4,8,16],
          'cover_decline_list':[3, 3, 3, 3, 3],
-         'peak': 99000, 'tough': 95000,
+         'peak': 1.1173, 'tough': 1.0239,
          'stop_profit_rate':1.3,
          },
 
