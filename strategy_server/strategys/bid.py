@@ -64,6 +64,8 @@ class BidStrategy:
                 self.logger.info(f'<bid cal_indicator> stop_profit insert_order '
                                  f'{instrument} close long {last_price} {short_position.volume}')
                 self.cover_count = 0
+                self.peak = last_price
+                self.tough = last_price
                 return
 
             if decline_rate < - self.cover_decline_list[self.cover_count] and tough_rise_rate > 0.2:
@@ -94,6 +96,8 @@ class BidStrategy:
                                  f'{instrument} close short {last_price} {short_position.volume}')
 
                 self.cover_count = 0
+                self.peak = last_price
+                self.tough = last_price
                 return
 
             if decline_rate < - self.cover_decline_list[self.cover_count] and peak_decline_rate > 0.2:
