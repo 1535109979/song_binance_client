@@ -38,6 +38,9 @@ class BidStrategy:
         short_position: InstrumentPosition = self.strategy_process.td_gateway.account_book.get_instrument_position(
             f'{instrument}.{self.strategy_process.td_gateway.exchange_type}', Direction.SHORT)
 
+        if self.cover_count == len(self.cover_muti_list) - 1:
+            self.logger.info(f'cover_count limit:cover_count times={self.cover_count}')
+
         if long_position.volume:
             decline_rate = (last_price / self.last_couer_price - 1) * 100
             profit_rate = (last_price / long_position.cost - 1) * 100
@@ -54,7 +57,8 @@ class BidStrategy:
                 self.strategy_process.logger.info(f'<cal_singal> insert_order  instrument={instrument} '
                                                   f'open LONG {OrderPriceType} price={str(last_price)} '
                                                   f'cash={self.cover_muti_list[self.cover_count] * self.cash}')
-                self.cover_count += 1
+                # self.cover_count += 1
+                self.last_couer_price = last_price
 
         if short_position.volume:
             decline_rate = (1 - last_price / self.last_couer_price) * 100
@@ -73,8 +77,8 @@ class BidStrategy:
                 self.strategy_process.logger.info(f'<cal_singal> insert_order  instrument={instrument} '
                                                   f'open SHORT {OrderPriceType} price={str(last_price)} '
                                                   f'cash={self.cover_muti_list[self.cover_count] * self.cash}')
-
-                self.cover_count += 1
+                self.last_couer_price = last_price
+                # self.cover_count += 1
 
     @common_exception(log_flag=True)
     def cal_singal(self, quote):
