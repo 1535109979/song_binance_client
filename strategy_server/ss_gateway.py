@@ -31,15 +31,17 @@ class BiFutureSsGateway:
 
     @common_exception(log_flag=True)
     def start(self):
+        # 启动交易
+        self.td_gateway.connect()
+        self.logger = self.td_gateway.logger
+
+        time.sleep(5)
+
         self.ms_stub = BianMarketStub()
         self.ms_stub.subscribe_stream_in_new_thread(
             instruments=self.strategy_process_map.keys(),
             # instruments=['BTCUSDT'],
             on_quote=self.on_quote)
-
-        # 启动交易
-        self.td_gateway.connect()
-        self.logger = self.td_gateway.logger
 
         self.send_msg('策略服务启动成功')
 
