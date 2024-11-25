@@ -70,10 +70,10 @@ class BidStrategy:
                 f'peak={self.peak} tough={self.tough}')
 
             if decline_rate < - self.cover_decline_list[self.cover_count] and rise_rate > 0.005:
-                # self.strategy_process.td_gateway.insert_order(instrument, OffsetFlag.OPEN, Direction.SHORT,
-                #                                               OrderPriceType.LIMIT, str(last_price), 1,
-                #                                               cash=self.cover_muti_list[self.cover_count] * self.cash, )
-                #
+                self.strategy_process.td_gateway.insert_order(instrument, OffsetFlag.OPEN, Direction.SHORT,
+                                                              OrderPriceType.LIMIT, str(last_price), 1,
+                                                              cash=self.cover_muti_list[self.cover_count] * self.cash, )
+
                 self.strategy_process.logger.info(f'<cal_singal> insert_order  instrument={instrument} '
                                                   f'open SHORT {OrderPriceType} price={str(last_price)} '
                                                   f'cash={self.cover_muti_list[self.cover_count] * self.cash}')
