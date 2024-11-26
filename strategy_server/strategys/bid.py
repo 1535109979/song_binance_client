@@ -19,14 +19,13 @@ class BidStrategy:
         self.cover_decline_list = params['cover_decline_list']
         self.cover_muti_list = params['cover_muti_list']
         self.stop_profit_rate = params['stop_profit_rate']
-        self.reset_flag = strategy_process.reset_flag
 
     @common_exception(log_flag=True)
     def cal_indicator(self, quote):
         last_price = float(quote['last_price'])
         instrument = quote['symbol']
 
-        self.logger.info(f"{self.reset_flag}")
+        self.logger.info(f"{self.trategy_process.reset_flag}")
         return
 
         if last_price > self.peak or not self.peak:
