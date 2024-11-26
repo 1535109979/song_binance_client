@@ -21,23 +21,10 @@ class BidStrategy:
         self.stop_profit_rate = params['stop_profit_rate']
         self.reset_flag = strategy_process.reset_flag
 
-        self.nn = []
-
     @common_exception(log_flag=True)
     def cal_indicator(self, quote):
         last_price = float(quote['last_price'])
         instrument = quote['symbol']
-
-        self.nn.append(last_price)
-        self.logger.info(f'{len(self.nn)}')
-        if len(self.nn) == 10:
-            self.logger.info(f'close ------')
-            self.strategy_process.td_gateway.insert_order(instrument, OffsetFlag.CLOSE,
-                                                          Direction.LONG,
-                                                          OrderPriceType.LIMIT, str(last_price),
-                                                          15)
-
-        return
 
         if last_price > self.peak:
             self.peak = last_price
@@ -81,9 +68,9 @@ class BidStrategy:
                 self.strategy_process.td_gateway.insert_order(instrument, OffsetFlag.CLOSE,
                                                               Direction.LONG,
                                                               OrderPriceType.LIMIT, str(last_price),
-                                                              short_position.volume)
+                                                              long_position.volume)
                 self.logger.info(f'<bid cal_indicator> stop_profit insert_order '
-                                 f'{instrument} close long {last_price} {short_position.volume}')
+                                 f'{instrument} close long {last_price} {long_position.volume}')
                 self.cover_count = 0
                 self.peak = last_price
                 self.tough = last_price
