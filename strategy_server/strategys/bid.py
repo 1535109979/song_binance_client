@@ -26,10 +26,10 @@ class BidStrategy:
         last_price = float(quote['last_price'])
         instrument = quote['symbol']
 
-        if last_price > self.peak:
+        if last_price > self.peak or not self.peak:
             self.peak = last_price
 
-        if last_price < self.tough:
+        if last_price < self.tough or not self.tough:
             self.tough = last_price
 
         long_position: InstrumentPosition = self.strategy_process.td_gateway.account_book.get_instrument_position(
@@ -37,6 +37,7 @@ class BidStrategy:
 
         short_position: InstrumentPosition = self.strategy_process.td_gateway.account_book.get_instrument_position(
             f'{instrument}.{self.strategy_process.td_gateway.exchange_type}', Direction.SHORT)
+
 
         # 补仓次数达到上限
         if self.cover_count == len(self.cover_muti_list) - 1:
@@ -89,7 +90,7 @@ class BidStrategy:
         if short_position.volume:
             if self.reset_flag:
                 self.cover_count = 0
-                self.last_couer_price = long_position.cost
+                self.last_couer_price = short_position.cost
                 self.peak = last_price
                 self.tough = last_price
                 self.reset_flag = False
