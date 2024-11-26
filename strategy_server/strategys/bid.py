@@ -31,8 +31,6 @@ class BidStrategy:
         if last_price < self.tough:
             self.tough = last_price
 
-        decline_rate = 0
-
         long_position: InstrumentPosition = self.strategy_process.td_gateway.account_book.get_instrument_position(
             f'{instrument}.{self.strategy_process.td_gateway.exchange_type}', Direction.LONG)
 
@@ -49,6 +47,9 @@ class BidStrategy:
         if long_position.volume:
             if long_position.volume * last_price < self.cash * 1.5:
                 self.cover_count = 0
+                self.last_couer_price = long_position.cost
+                self.peak = last_price
+                self.tough = last_price
 
             decline_rate = (last_price / self.last_couer_price - 1) * 100
             profit_rate = (last_price / long_position.cost - 1) * 100
@@ -57,7 +58,8 @@ class BidStrategy:
                 f'<bid cal_indicator> LONG <cover_count={self.cover_count} {self.cover_decline_list[self.cover_count]}> '
                 f'decline_rate = {decline_rate} profit_rate={profit_rate} '
                 f'tough_rise_rate={tough_rise_rate} peak_decline_rate={peak_decline_rate} '
-                f'peak={self.peak} tough={self.tough} l={last_price}')
+                f'peak={self.peak} tough={self.tough} l={last_price} '
+                f'last_couer_price={self.last_couer_price}')
 
 
             if profit_rate > self.stop_profit_rate and peak_decline_rate > 0.2 and self.cover_count:
@@ -85,6 +87,9 @@ class BidStrategy:
         if short_position.volume:
             if short_position.volume * last_price < self.cash * 1.5:
                 self.cover_count = 0
+                self.last_couer_price = long_position.cost
+                self.peak = last_price
+                self.tough = last_price
 
             decline_rate = (1 - last_price / self.last_couer_price) * 100
             profit_rate = (1 - last_price / short_position.cost) * 100
@@ -92,7 +97,8 @@ class BidStrategy:
                 f'<bid cal_indicator> SHORT <cover_count={self.cover_count} {self.cover_decline_list[self.cover_count]}> '
                 f'decline_rate = {decline_rate} profit_rate={profit_rate} '
                 f'tough_rise_rate={tough_rise_rate}  peak_decline_rate={peak_decline_rate} '
-                f'peak={self.peak} tough={self.tough} l={last_price}')
+                f'peak={self.peak} tough={self.tough} l={last_price} '
+                f'last_couer_price={self.last_couer_price}')
 
             if profit_rate > self.stop_profit_rate and tough_rise_rate > 0.2 and self.cover_count:
                 self.strategy_process.td_gateway.insert_order(instrument, OffsetFlag.CLOSE,
