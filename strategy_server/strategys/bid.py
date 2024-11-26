@@ -46,9 +46,6 @@ class BidStrategy:
         tough_rise_rate = (last_price / self.tough - 1) * 100
         peak_decline_rate = (1 - last_price / self.peak) * 100
 
-        self.logger.info(f'----{self.reset_flag}----')
-        return
-
         if long_position.volume:
             if self.reset_flag:
                 self.cover_count = 0
