@@ -155,3 +155,5 @@ class BreakoutStrategy:
                                                   f'volume={self.open_volume} cash={self.params["cash"]}')
 
                 self.signal_flag = None
+                self.strategy_process.reset_flag = True
+

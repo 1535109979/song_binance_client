@@ -25,7 +25,7 @@ class StrategyProcess:
         self.create_logger()
 
         self.load_strategy()
-
+        self.reset_flag = False
 
 
     def load_strategy(self):

@@ -19,11 +19,23 @@ class BidStrategy:
         self.cover_decline_list = params['cover_decline_list']
         self.cover_muti_list = params['cover_muti_list']
         self.stop_profit_rate = params['stop_profit_rate']
+        self.reset_flag = strategy_process.reset_flag
+
+        self.nn = []
 
     @common_exception(log_flag=True)
     def cal_indicator(self, quote):
         last_price = float(quote['last_price'])
         instrument = quote['symbol']
+
+        self.nn.append(last_price)
+        self.logger.info(f'{self.nn}')
+        if len(self.nn) == 10:
+            self.logger.info(f'close ------')
+            self.strategy_process.td_gateway.insert_order(instrument, OffsetFlag.CLOSE,
+                                                          Direction.LONG,
+                                                          OrderPriceType.LIMIT, str(last_price),
+                                                          15)
 
         if last_price > self.peak:
             self.peak = last_price
@@ -45,11 +57,12 @@ class BidStrategy:
         peak_decline_rate = (1 - last_price / self.peak) * 100
 
         if long_position.volume:
-            if long_position.volume * last_price < self.cash * 1.5:
+            if self.reset_flag:
                 self.cover_count = 0
                 self.last_couer_price = long_position.cost
                 self.peak = last_price
                 self.tough = last_price
+                self.reset_flag = False
 
             decline_rate = (last_price / self.last_couer_price - 1) * 100
             profit_rate = (last_price / long_position.cost - 1) * 100
@@ -85,11 +98,12 @@ class BidStrategy:
                     self.last_couer_price = last_price
 
         if short_position.volume:
-            if short_position.volume * last_price < self.cash * 1.5:
+            if self.reset_flag:
                 self.cover_count = 0
                 self.last_couer_price = long_position.cost
                 self.peak = last_price
                 self.tough = last_price
+                self.reset_flag = False
 
             decline_rate = (1 - last_price / self.last_couer_price) * 100
             profit_rate = (1 - last_price / short_position.cost) * 100
@@ -127,3 +141,4 @@ class BidStrategy:
     @common_exception(log_flag=True)
     def cal_singal(self, quote):
         pass
+
