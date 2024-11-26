@@ -26,6 +26,9 @@ class BidStrategy:
         last_price = float(quote['last_price'])
         instrument = quote['symbol']
 
+        self.logger.info(f"{self.reset_flag}")
+        return
+
         if last_price > self.peak or not self.peak:
             self.peak = last_price
 
