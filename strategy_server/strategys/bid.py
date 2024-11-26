@@ -29,13 +29,15 @@ class BidStrategy:
         instrument = quote['symbol']
 
         self.nn.append(last_price)
-        self.logger.info(f'{self.nn}')
+        self.logger.info(f'{len(self.nn)}')
         if len(self.nn) == 10:
             self.logger.info(f'close ------')
             self.strategy_process.td_gateway.insert_order(instrument, OffsetFlag.CLOSE,
                                                           Direction.LONG,
                                                           OrderPriceType.LIMIT, str(last_price),
                                                           15)
+
+        return
 
         if last_price > self.peak:
             self.peak = last_price
