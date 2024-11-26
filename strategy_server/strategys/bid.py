@@ -25,8 +25,6 @@ class BidStrategy:
         last_price = float(quote['last_price'])
         instrument = quote['symbol']
 
-        self.logger.info(f"{self.strategy_process.reset_flag}")
-        return
 
         if last_price > self.peak or not self.peak:
             self.peak = last_price
@@ -49,7 +47,7 @@ class BidStrategy:
         peak_decline_rate = (1 - last_price / self.peak) * 100
 
         if long_position.volume:
-            if self.reset_flag:
+            if self.strategy_process.reset_flag:
                 self.cover_count = 0
                 self.last_couer_price = long_position.cost
                 self.peak = last_price
@@ -90,7 +88,7 @@ class BidStrategy:
                     self.last_couer_price = last_price
 
         if short_position.volume:
-            if self.reset_flag:
+            if self.strategy_process.reset_flag:
                 self.cover_count = 0
                 self.last_couer_price = short_position.cost
                 self.peak = last_price

@@ -106,9 +106,6 @@ class BreakoutStrategy:
         instrument = quote['symbol']
         last_price = quote['last_price']
 
-        self.strategy_process.reset_flag = True
-        return
-
         if not quote.get('is_closed', 0):
             return
 
