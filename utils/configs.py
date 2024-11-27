@@ -34,16 +34,6 @@ class Configs:
 
     strategy_list = [
 
-        # {'instrument': 'LTCUSDT', 'cash': 200,
-        #  'windows': 550, 'roll_mean_period': 630, 'interval_period': 60,
-        #  'strategy_name': 'breakout', 'open_direction': 'LONG',
-        #  'open_volume': 30, 'order_step_muti': 10, 'stop_loss_rate': 0},
-
-        # {'instrument': 'EOSUSDT', 'cash': 200,
-        #  'windows': 390, 'roll_mean_period': 100, 'interval_period': 100,
-        #  'strategy_name': 'breakout', 'open_direction': 'LONG',
-        #  'open_volume': 30, 'order_step_muti': 20, 'stop_loss_rate': 0},
-
         {'instrument': 'RLCUSDT', 'cash': 200,
          'windows': 400, 'roll_mean_period': 120, 'interval_period': 860,
          'strategy_name': ['bid','breakout'], 'open_direction': 'LONG',
@@ -66,10 +56,27 @@ class Configs:
          'stop_profit_rate':1.3,
          },
 
-        # {'instrument': 'PORTALUSDT', 'cash': 200,
-        #  'windows': 600, 'roll_mean_period': 500, 'interval_period': 600,
-        #  'strategy_name': 'breakout', 'open_direction': 'LONG',
-        #  'open_volume': 30, 'order_step_muti': 10, 'stop_loss_rate': 0},
+        {'instrument': 'LTCUSDT', 'cash': 50,
+         'windows': 550, 'roll_mean_period': 630, 'interval_period': 60,
+         'strategy_name': ['bid', 'breakout'], 'open_direction': 'LONG',
+         'open_volume': 30, 'order_step_muti': 10, 'stop_loss_rate': 0,
+         'cover_count': 0, 'last_couer_price': 0,
+         'cover_muti_list': [1, 2, 4, 8, 16],
+         'cover_decline_list': [3, 3, 3, 3, 3],
+         'peak': 0, 'tough': 0,
+         'stop_profit_rate': 1.3,
+         },
+
+        {'instrument': 'EOSUSDT', 'cash': 50,
+         'windows': 390, 'roll_mean_period': 100, 'interval_period': 100,
+         'strategy_name': ['bid', 'breakout'], 'open_direction': 'LONG',
+         'open_volume': 30, 'order_step_muti': 10, 'stop_loss_rate': 0,
+         'cover_count': 0, 'last_couer_price': 0,
+         'cover_muti_list': [1, 2, 4, 8, 16],
+         'cover_decline_list': [3, 3, 3, 3, 3],
+         'peak': 0, 'tough': 0,
+         'stop_profit_rate': 1.3,
+         },
 
     ]
 
