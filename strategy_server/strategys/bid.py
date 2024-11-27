@@ -47,12 +47,14 @@ class BidStrategy:
         peak_decline_rate = (1 - last_price / self.peak) * 100
 
         if long_position.volume:
+            # breakout 做反手交易 之后 需要 重置
             if self.strategy_process.reset_flag:
                 self.cover_count = 0
                 self.last_couer_price = long_position.cost
                 self.peak = last_price
                 self.tough = last_price
-                self.reset_flag = False
+                self.strategy_process.reset_flag = False
+                return
 
             decline_rate = (last_price / self.last_couer_price - 1) * 100
             profit_rate = (last_price / long_position.cost - 1) * 100
@@ -93,7 +95,8 @@ class BidStrategy:
                 self.last_couer_price = short_position.cost
                 self.peak = last_price
                 self.tough = last_price
-                self.reset_flag = False
+                self.strategy_process.reset_flag = False
+                return
 
             decline_rate = (1 - last_price / self.last_couer_price) * 100
             profit_rate = (1 - last_price / short_position.cost) * 100
