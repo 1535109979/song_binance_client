@@ -12,11 +12,7 @@ import pandas as pd
 # df.to_csv('trade.csv')
 
 with sqlite3.connect('bian_f_data.db') as conn:
-    df = pd.read_sql('select * from account_value', conn)
+    df = pd.read_sql('select * from account_value where update_time > "2024-11-20 15:55:58"', conn)
     print(df)
-    df = pd.read_sql('select * from order_info', conn)
-    print(df)
-    df = pd.read_sql('select * from trade_info', conn)
-    print(df)
-    print(df['profit'].sum())
+    df.to_csv('account_value.csv')
 
