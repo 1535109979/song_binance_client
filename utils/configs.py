@@ -39,8 +39,8 @@ class Configs:
          'strategy_name': ['bid','breakout'], 'open_direction': 'LONG',
          'open_volume': 30, 'order_step_muti': 20, 'stop_loss_rate': 0,
          'cover_count': 0,'last_couer_price':0,
-         'cover_muti_list': [1, 2, 4, 8, 16],
-         'cover_decline_list': [3, 3, 3, 3, 3],
+         'cover_muti_list': [2, 4, 8, 16, 32],
+         'cover_decline_list': [4, 4, 4, 4, 4],
          'peak':2.1439, 'tough':1.9825,
          'stop_profit_rate': 1.3,
         },
@@ -56,7 +56,7 @@ class Configs:
          'stop_profit_rate':1.3,
          },
 
-        {'instrument': 'LTCUSDT', 'cash': 50,
+        {'instrument': 'LTCUSDT', 'cash': 200,
          'windows': 550, 'roll_mean_period': 630, 'interval_period': 60,
          'strategy_name': ['bid', 'breakout'], 'open_direction': 'LONG',
          'open_volume': 30, 'order_step_muti': 10, 'stop_loss_rate': 0,
@@ -67,7 +67,7 @@ class Configs:
          'stop_profit_rate': 1.3,
          },
 
-        {'instrument': 'EOSUSDT', 'cash': 50,
+        {'instrument': 'EOSUSDT', 'cash': 200,
          'windows': 390, 'roll_mean_period': 100, 'interval_period': 100,
          'strategy_name': ['bid', 'breakout'], 'open_direction': 'LONG',
          'open_volume': 30, 'order_step_muti': 10, 'stop_loss_rate': 0,
