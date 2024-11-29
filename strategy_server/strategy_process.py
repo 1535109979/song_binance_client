@@ -14,7 +14,7 @@ from song_binance_client.utils.sys_exception import common_exception
 class StrategyProcess:
 
     def __init__(self, gateway, params):
-        self.reset_flag = True
+        self.reset_flag = False
         self.gateway = gateway
         self.td_gateway = self.gateway.td_gateway
         self.logger = None
