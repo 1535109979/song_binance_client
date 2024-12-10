@@ -56,7 +56,7 @@ class BreakoutStrategy:
         if len(self.am) < self.min_save_window:
             self.am.append(last_price)
             if len(self.am) >= self.roll_mean_period:
-                roll_mean = round(sum([float(x) for x in self.am[-self.roll_mean_period:]]) / self.roll_mean_period, 4)
+                roll_mean = round(sum([float(x) for x in self.am[-self.roll_mean_period:]]) / self.roll_mean_period, 8)
                 self.roll_mean_list.append(roll_mean)
             self.logger.info(f'<cal_indicator>less price:min_save_window={self.min_save_window} len am:{len(self.am)}')
             return
@@ -68,7 +68,7 @@ class BreakoutStrategy:
         self.max_dr = last_price / self.last_n_max - 1
 
         self.am.append(last_price)
-        roll_mean = round(sum([float(x) for x in self.am[-self.roll_mean_period:]]) / self.roll_mean_period, 4)
+        roll_mean = round(sum([float(x) for x in self.am[-self.roll_mean_period:]]) / self.roll_mean_period, 8)
         self.roll_mean_list.append(roll_mean)
         self.roll_mean_list = self.roll_mean_list[-self.interval_period * 2:]
 
@@ -78,9 +78,9 @@ class BreakoutStrategy:
             self.regressio_flag = Direction.SHORT
 
         if last_price > self.roll_mean_list[-self.interval_period] > self.roll_mean_list[-self.interval_period * 2]:
-            self.trend_flag = Direction.LONG
-        elif last_price < self.roll_mean_list[-self.interval_period] < self.roll_mean_list[-self.interval_period * 2]:
             self.trend_flag = Direction.SHORT
+        elif last_price < self.roll_mean_list[-self.interval_period] < self.roll_mean_list[-self.interval_period * 2]:
+            self.trend_flag = Direction.LONG
 
         if self.regressio_flag:
             if self.regressio_flag != self.trend_flag:

@@ -75,7 +75,7 @@ class BidStrategy:
                 return
 
             # 补仓次数达到上限
-            if self.cover_count == len(self.cover_muti_list) - 1:
+            if self.cover_count == len(self.cover_muti_list):
                 self.logger.info(f'cover_count limit:cover_count times={self.cover_count}')
                 return
 
@@ -121,7 +121,7 @@ class BidStrategy:
                 return
 
             # 补仓次数达到上限
-            if self.cover_count == len(self.cover_muti_list) - 1:
+            if self.cover_count == len(self.cover_muti_list):
                 self.logger.info(f'cover_count limit:cover_count times={self.cover_count}')
                 return
 
